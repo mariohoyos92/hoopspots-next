@@ -1,0 +1,79 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint",
+        "fp"
+    ],
+    "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "eslint-config-leafly/react.js",
+        "plugin:prettier/recommended" // integrates with eslint-config-prettier
+    ],
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+    "rules": {
+        "@typescript-eslint/explicit-function-return-type": [
+            "off"
+        ],
+        "indent": "off",
+        "func-names": "off", // stop complaining about func names in nightwatch, stack trace is fine.
+        "@typescript-eslint/indent": [
+            "off"
+        ],
+        "@typescript-eslint/prefer-interface": [
+            "off"
+        ],
+        // When using Next/Link an href is added to an anchor tag and it is accessible by default
+        // this makes it so you don't have to duplicate the href property
+        "jsx-a11y/anchor-is-valid": [
+            "error",
+            {
+                "components": [
+                    "Link"
+                ],
+                "specialLink": [
+                    "hrefLeft",
+                    "hrefRight"
+                ],
+                "aspects": [
+                    "invalidHref",
+                    "preferButton"
+                ]
+            }
+        ]
+    },
+    "overrides": [
+        {
+            "files": [
+                "*.js"
+            ],
+            "rules": {
+                "@typescript-eslint/no-var-requires": "off"
+            }
+        },
+        // https://github.com/evcohen/eslint-plugin-jsx-a11y/issues/398
+        {
+            "files": [
+                "*.tsx",
+                "*.ts"
+            ],
+            "rules": {
+                "jsx-a11y/no-onchange": "off",
+                "@typescript-eslint/no-unused-vars": 2,
+                "react-hooks/exhaustive-deps": "off",
+                "fp/no-mutating-assign": "error"
+            }
+        },
+        // Need this for nightwatch tests to not throw errors all over the place
+        {
+            "files": [
+                "test/**/*.js"
+            ],
+            "rules": {
+                "no-unused-expressions": "off"
+            }
+        }
+    ]
+}
