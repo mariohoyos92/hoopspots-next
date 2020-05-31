@@ -1,19 +1,18 @@
-import auth0 from "../../../lib/auth0";
-import { createUser, getUserById } from "../_repositories/user-repository";
+import auth0 from '../../../lib/auth0';
+import { createUser, getUserById } from '../_repositories/user-repository';
 
-export default auth0.requireAuthentication(async function userProfile(
-  req,
-  res
-) {
+export default async function userProfile(req, res) {
   try {
     const { user } = await auth0.getSession(req);
-    if (req.method === "GET") {
+    if (req.method === 'GET') {
+      console.log({ userFromBackend: user });
       const userProfile = await getUserById(user.sub);
       if (!userProfile) {
-        return res.status(404).json({ message: "User does not exist" });
+        return res.status(404).json({ message: 'User does not exist' });
       }
+      res.json(userProfile);
     }
-    if (req.method === "POST") {
+    if (req.method === 'POST') {
       const { userInfo } = req.body;
       const createdUser = await createUser(userInfo);
       return res.status(200).json(createdUser);
@@ -22,4 +21,4 @@ export default auth0.requireAuthentication(async function userProfile(
     console.error(error);
     res.status(500).json({ error });
   }
-});
+}

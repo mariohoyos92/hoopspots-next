@@ -1,46 +1,48 @@
-import React from "react";
-import auth0 from "../lib/auth0";
-import { NextPage } from "next";
-import MetaTags from "../components/MetaTags";
-import { IClaims } from "@auth0/nextjs-auth0/dist/session/session";
-import { getUserProfile } from "../services/user-service";
-import axios from "axios";
-import { accessToken } from "mapbox-gl";
+import React, { useState, useEffect } from 'react';
+import auth0 from '../lib/auth0';
+import { NextPage } from 'next';
+import MetaTags from '../components/MetaTags';
+import { IClaims } from '@auth0/nextjs-auth0/dist/session/session';
+import { getUserProfile } from '../services/user-service';
+import { User } from './api/_models/user-model';
 
 const Profile: NextPage<{ user: IClaims }> = ({ user }) => {
+  const [userProfile, setUserProfile] = useState<User>(null);
+
+  const fetchUserProfile = async () => {
+    const { data: fetchedUserProfile } = await getUserProfile();
+    console.log(fetchedUserProfile);
+    // Need to setup mongo stuff!
+    setUserProfile(fetchedUserProfile);
+  };
+
+  console.log({ user });
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
   return (
     <>
-      <MetaTags title={"home title"} description={"this is a description"} />
+      <MetaTags title={'home title'} description={'this is a description'} />
       <div className="container" data-testid="home-container">
-        This is the user profile from {user.name}
+        This is the user profile from {userProfile && userProfile.name}
       </div>
     </>
   );
 };
 
 Profile.getInitialProps = async ({ req, res }) => {
-  if (typeof window === "undefined") {
-    const response = await axios.get<IClaims>(
-      "http://localhost:3000/api/auth/me"
-    );
-
-    console.log(response.data.accessToken);
-    if (!response || !response.data.user) {
+  if (typeof window === 'undefined') {
+    const response = await auth0.getSession(req);
+    if (!response || !response.user) {
       res.writeHead(302, {
-        Location: "/api/auth/login"
+        Location: '/api/auth/login',
       });
       res.end();
       return;
     }
-    try {
-      const userProfile = await axios.get("http://localhost:3000/api/user", {
-        headers: { authorization: `Bearer ${response.data.accessToken}` }
-      });
-    } catch (error) {
-      console.log({ error });
-    }
 
-    return { user: response.data.user };
+    return { user: response.user };
   }
 };
 

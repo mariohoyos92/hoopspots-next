@@ -1,14 +1,16 @@
-import React from "react";
-import App from "next/app";
-import Router from "next/router";
-import NProgress from "nprogress";
+import React from 'react';
+import App from 'next/app';
+import Router from 'next/router';
+import NProgress from 'nprogress';
 
-import "lazysizes";
-import "lazysizes/plugins/attrchange/ls.attrchange";
+import 'lazysizes';
+import 'lazysizes/plugins/attrchange/ls.attrchange';
 
-Router.events.on("routeChangeStart", () => NProgress.start());
-Router.events.on("routeChangeError", () => NProgress.done());
-Router.events.on("routeChangeComplete", () => NProgress.done());
+import '../styles/index.css';
+
+Router.events.on('routeChangeStart', () => NProgress.start());
+Router.events.on('routeChangeError', () => NProgress.done());
+Router.events.on('routeChangeComplete', () => NProgress.done());
 
 class AppWrapper extends App<{}> {
   public render() {
