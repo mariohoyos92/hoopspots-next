@@ -4,8 +4,8 @@ import { createUser, getUserById } from '../_repositories/user-repository';
 export default async function userProfile(req, res) {
   try {
     const { user } = await auth0.getSession(req);
+
     if (req.method === 'GET') {
-      console.log({ userFromBackend: user });
       const userProfile = await getUserById(user.sub);
       if (!userProfile) {
         return res.status(404).json({ message: 'User does not exist' });

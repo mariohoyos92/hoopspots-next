@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 // Create cached connection variable
 let cachedDb = null;
@@ -8,16 +8,14 @@ export const connectToMongo = async () => {
     return cachedDb;
   }
   try {
-    const db = await mongoose.connect(
-      process.env.MONGO_SERVER_CONNECTION || "mongodb://127.0.0.1:27017/",
-      {
-        useNewUrlParser: true,
-        dbName: process.env.MONGO_DB_NAME || "hoopspots",
-        reconnectTries: Number.MAX_VALUE,
-        autoReconnect: true
-      }
-    );
-    mongoose.connection.on("error", err => {
+    const db = await mongoose.connect(process.env.MONGO_SERVER_CONNECTION || 'mongodb://127.0.0.1:27017/', {
+      useNewUrlParser: true,
+      dbName: process.env.MONGO_DB_NAME || 'hoopspots',
+      reconnectTries: Number.MAX_VALUE,
+      autoReconnect: true,
+      useCreateIndex: true,
+    });
+    mongoose.connection.on('error', err => {
       console.error(err);
     });
     cachedDb = db;

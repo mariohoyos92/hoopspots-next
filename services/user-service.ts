@@ -1,8 +1,9 @@
-import axios from "axios";
-import appRoutes from "../types/Routes";
-import { User } from "../pages/api/_models/user-model";
+import axios from 'axios';
+import { User } from '../pages/api/_models/user-model';
+
+const baseRoute = '/api/user';
 
 export function getUserProfile() {
   // knows the user based on the cookie
-  return axios.get<User>(appRoutes.api.user.getUser);
+  return axios.get<User>(baseRoute);
 }

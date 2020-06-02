@@ -5,22 +5,21 @@ import MetaTags from '../components/MetaTags';
 import { IClaims } from '@auth0/nextjs-auth0/dist/session/session';
 import { getUserProfile } from '../services/user-service';
 import { User } from './api/_models/user-model';
+import isServer from '../utils/isServer';
 
-const Profile: NextPage<{ user: IClaims }> = ({ user }) => {
-  const [userProfile, setUserProfile] = useState<User>(null);
+const Profile: NextPage<{ user: IClaims }> = props => {
+  const [userProfile, setUserProfile] = useState<User>(props.user);
 
   const fetchUserProfile = async () => {
     const { data: fetchedUserProfile } = await getUserProfile();
-    console.log(fetchedUserProfile);
-    // Need to setup mongo stuff!
+
     setUserProfile(fetchedUserProfile);
   };
-
-  console.log({ user });
 
   useEffect(() => {
     fetchUserProfile();
   }, []);
+
   return (
     <>
       <MetaTags title={'home title'} description={'this is a description'} />
@@ -32,7 +31,7 @@ const Profile: NextPage<{ user: IClaims }> = ({ user }) => {
 };
 
 Profile.getInitialProps = async ({ req, res }) => {
-  if (typeof window === 'undefined') {
+  if (isServer()) {
     const response = await auth0.getSession(req);
     if (!response || !response.user) {
       res.writeHead(302, {
@@ -41,7 +40,6 @@ Profile.getInitialProps = async ({ req, res }) => {
       res.end();
       return;
     }
-
     return { user: response.user };
   }
 };

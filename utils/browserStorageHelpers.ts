@@ -1,9 +1,8 @@
-type BrowserStorageType = "localStorage" | "sessionStorage";
+import isServer from './isServer';
 
-export const isExpired = (
-  expiryTime = 9000000000000,
-  currentTime: number = Date.now()
-) => {
+type BrowserStorageType = 'localStorage' | 'sessionStorage';
+
+export const isExpired = (expiryTime = 9000000000000, currentTime: number = Date.now()) => {
   return currentTime > expiryTime;
 };
 
@@ -15,7 +14,7 @@ export const getExpiry = (expiry: Expiry, currentTime: number = Date.now()) => {
   const minuteMultiplier = millisecondsInSecond * secondsInMinute;
   const dayMultiplier = minuteMultiplier * minutesInHour * hoursInDay;
   let additionalTime;
-  if (expiry.unit === "minutes") {
+  if (expiry.unit === 'minutes') {
     additionalTime = expiry.value * minuteMultiplier;
   } else {
     additionalTime = expiry.value * dayMultiplier;
@@ -23,18 +22,15 @@ export const getExpiry = (expiry: Expiry, currentTime: number = Date.now()) => {
   return currentTime + additionalTime;
 };
 
-export type CurrentlyUsedKeys = "example" | "another example";
+export type CurrentlyUsedKeys = 'example' | 'another example';
 
 type GetFromStorageArgs = {
   type: BrowserStorageType;
   key: CurrentlyUsedKeys;
 };
 
-export const getFromStorage = <T>({
-  type,
-  key
-}: GetFromStorageArgs): T | null => {
-  if (typeof window === "undefined") return null;
+export const getFromStorage = <T>({ type, key }: GetFromStorageArgs): T | null => {
+  if (isServer()) return null;
   try {
     // dynamically infer local or session storage from window
     const data = window[type].getItem(key);
@@ -51,7 +47,7 @@ export const getFromStorage = <T>({
 };
 
 type Expiry = {
-  unit: "days" | "minutes";
+  unit: 'days' | 'minutes';
   value: number;
 };
 type SetToStorageArgs = {
@@ -61,12 +57,7 @@ type SetToStorageArgs = {
   expiry?: Expiry;
 };
 
-export const setToStorage = ({
-  type,
-  key,
-  value,
-  expiry = { unit: "days", value: 30 }
-}: SetToStorageArgs) => {
+export const setToStorage = ({ type, key, value, expiry = { unit: 'days', value: 30 } }: SetToStorageArgs) => {
   const item = { value, expiryTime: getExpiry(expiry) };
   const itemData = JSON.stringify(item);
 
@@ -83,7 +74,7 @@ export const setToStorage = ({
 export const refreshStorage = ({
   key,
   type,
-  expiry = { unit: "minutes", value: 30 }
+  expiry = { unit: 'minutes', value: 30 },
 }: GetFromStorageArgs & { expiry?: Expiry }) => {
   const value = getFromStorage({ type, key });
   if (value) {
@@ -91,7 +82,7 @@ export const refreshStorage = ({
       type,
       key,
       value,
-      expiry
+      expiry,
     });
     return true;
   }

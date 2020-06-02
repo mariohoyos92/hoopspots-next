@@ -1,9 +1,7 @@
-import CourtModel, { Court, CourtRequestedDoc } from "../_models/court-model";
+import CourtModel, { Court, CourtRequestedDoc } from '../_models/court-model';
 
 // put service calls here, in the data-repository.
-export const getCourtById = async (
-  courtId: string
-): Promise<CourtRequestedDoc> => {
+export const getCourtById = async (courtId: string): Promise<CourtRequestedDoc> => {
   return CourtModel.find()
     .where({ courtId })
     .lean()

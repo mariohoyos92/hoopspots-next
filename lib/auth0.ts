@@ -1,10 +1,10 @@
-import { initAuth0 } from "@auth0/nextjs-auth0";
+import { initAuth0 } from '@auth0/nextjs-auth0';
 
 export default initAuth0({
   domain: process.env.AUTH0_DOMAIN,
   clientId: process.env.AUTH0_CLIENT_ID,
   clientSecret: process.env.AUTH0_CLIENT_SECRET,
-  scope: "openid profile",
+  scope: 'openid profile email',
   redirectUri: `${process.env.BASE_URL}/api/auth/callback`,
   postLogoutRedirectUri: `${process.env.BASE_URL}/`,
   session: {
@@ -21,12 +21,12 @@ export default initAuth0({
     // (Optional) Store the access_token in the session. Defaults to false.
     storeAccessToken: true,
     // (Optional) Store the refresh_token in the session. Defaults to false.
-    storeRefreshToken: true
+    storeRefreshToken: true,
   },
   oidcClient: {
     // (Optional) Configure the timeout in milliseconds for HTTP requests to Auth0.
     httpTimeout: 2500,
     // (Optional) Configure the clock tolerance in milliseconds, if the time on your server is running behind.
-    clockTolerance: 10000
-  }
+    clockTolerance: 10000,
+  },
 });
