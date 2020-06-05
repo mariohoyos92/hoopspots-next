@@ -11,6 +11,7 @@
     "@auth0/nextjs-auth0": "^0.10.0",
     "@mapbox/mapbox-gl-geocoder": "^4.5.1",
     "@tailwindcss/ui": "^0.3.0",
+    "@types/yup": "^0.29.2",
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "lazysizes": "^5.2.2",
@@ -19,7 +20,8 @@
     "nprogress": "^0.2.0",
     "react": "16.12.0",
     "react-aria-modal": "^4.0.0",
-    "react-dom": "16.12.0"
+    "react-dom": "16.12.0",
+    "yup": "^0.29.1"
   },
   "devDependencies": {
     "@now/node": "^1.6.1",

@@ -11,14 +11,13 @@ export type MapboxAddressFields = {
 };
 
 export type Court = {
-  // courtId will be the addressId returned from MapBox so that we will never have duplicate courts and we know it's a physical address we can drive to
-  courtAddressId: string;
-  geoLocationData: MapboxAddressFields;
   courtName: string;
-  createdBy: string;
   description: string;
-  // the name of the "place" that the address is in, which would be a city, like "Las Vegas"
-  mapboxPlace: string;
+  geoLocationData: MapboxAddressFields;
+  createdBy: string;
+  indoorOutdoor: ['indoor', 'outdoor', 'both_or_multiple'];
+  publicPrivate: ['public', 'private'];
+  slug: string;
 };
 
 // _id and __v are created by the database, and are transparent to the user.
@@ -34,12 +33,12 @@ export const mapboxAddressFieldsDefinition: SchemaDefinition<MapboxAddressFields
 const courtDefinition: SchemaDefinition<Court> = {
   // will refer to userId
   createdBy: { type: String, required: true },
-  // will refer to the address id in mapbox
-  courtAddressId: { type: String, required: true, unique: true, index: true },
   geoLocationData: { type: mapboxAddressFieldsDefinition, required: true },
   courtName: { type: String, required: true },
   description: { type: String, required: true },
-  mapboxPlace: { type: String, required: true },
+  indoorOutdoor: { type: String, required: true },
+  publicPrivate: { type: String, required: true },
+  slug: { type: String, require: true, index: true, unique: true },
 } as const; // as const is important here for typescript to infer the required type correctly.
 
 const CourtSchema = new mongoose.Schema(courtDefinition, schemaOptions);

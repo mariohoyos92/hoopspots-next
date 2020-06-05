@@ -1,8 +1,10 @@
 export const appRoutes = {
-  pages: {
-    profile: '/profile',
-    home: '/index',
-  },
+  login: '/api/auth/login',
+  logout: '/api/auth/logout',
+  profile: '/profile',
+  home: '/',
+  gameFinder: '/gamefinder/[slug]',
+  newGame: '/game/new',
 };
 
 export default appRoutes;

@@ -15,25 +15,34 @@ import Nav from '../components/Nav';
 import isServer from '../utils/isServer';
 import { UserProvider } from '../lib/userContext';
 import { getUserProfile } from '../services/user-service';
+import Header from '../components/Header';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeError', () => NProgress.done());
 Router.events.on('routeChangeComplete', () => NProgress.done());
 
+// TODO: update all meta tags across the app
+
 class AppWrapper extends App<{ user: UserRequestedDoc }> {
   public render() {
     const { Component, pageProps } = this.props;
+
     return (
-      <main>
+      <div className="page-container bg-gray-100">
         <UserProvider user={pageProps.user}>
           <Nav user={pageProps.user} />
-          <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <Component {...pageProps} />
-          </div>
+          <Header {...pageProps} />
+          <main>
+            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+              <div className="px-4 py-8 sm:px-0">
+                <Component {...pageProps} />
+              </div>
+            </div>
+          </main>
         </UserProvider>
         <style jsx global>
           {`
-            #__next {
+            .page-container {
               min-height: 100vh;
               display: flex;
               flex-flow: column nowrap;
@@ -82,7 +91,7 @@ class AppWrapper extends App<{ user: UserRequestedDoc }> {
             }
           `}
         </style>
-      </main>
+      </div>
     );
   }
 }
@@ -108,7 +117,12 @@ AppWrapper.getInitialProps = async appContext => {
       user = await getOrCreateUserProfileFromAuthUser(response.user as UserFromAuth);
     }
   } else {
-    user = await getUserProfile();
+    user = await getUserProfile().catch(e => {
+      if (e.message.includes('404')) {
+        return;
+      }
+      throw e;
+    });
   }
   return { pageProps: { user, ...appProps.pageProps } };
 };

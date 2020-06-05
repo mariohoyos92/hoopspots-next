@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import MapBoxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
+import slugify from '../../utils/slugify';
+import { createPlace } from '../../services/place-service';
+
 type MapBoxDataType =
   | 'country'
   | 'region'
@@ -17,9 +20,11 @@ interface Props {
   id: string;
   onResult: (result) => void;
   types?: MapBoxDataType[];
+  className?: string;
+  name?: string;
 }
 
-const GeoCodeAutoComplete: React.FC<Props> = ({ placeHolder, id, onResult, types }) => {
+const GeoCodeAutoComplete: React.FC<Props> = ({ placeHolder, id, onResult, types, className }) => {
   const geocoderRef = useRef(null);
   const [geoCoderPresent, setGeoCoderPresent] = useState(false);
   useEffect(() => {
@@ -29,12 +34,22 @@ const GeoCodeAutoComplete: React.FC<Props> = ({ placeHolder, id, onResult, types
         placeholder: placeHolder,
         types: (types && types.join(',')) || 'place,postcode',
       });
-      GeoCoder.on('result', ({ result }) => onResult(result));
+      GeoCoder.on('result', async ({ result }) => {
+        const placeName = slugify(result['place_name_en-US']);
+        await createPlace({
+          slug: placeName,
+          text: result.id.includes('postcode') ? result.context[0].text : result.text,
+          center: { type: 'Point', coordinates: result.center },
+          mapboxId: result.id,
+          mapboxPlaceName: result['place_name_en-US'],
+        });
+        onResult(result);
+      });
       GeoCoder.addTo(`#${id}`);
       setGeoCoderPresent(true);
     }
   }, []);
-  return <div id={id} ref={geocoderRef}></div>;
+  return <div id={id} className={className} ref={geocoderRef}></div>;
 };
 
 export default GeoCodeAutoComplete;

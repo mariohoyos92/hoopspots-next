@@ -4,6 +4,7 @@ import Link from 'next/link';
 import StyledLink from '../StyledLink';
 import { Router } from 'next/router';
 import { UserRequestedDoc } from '../../pages/api/_models/user-model';
+import appRoutes from '../../types/Routes';
 
 const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
   const [profileDropDownIsOpen, setProfileDropdownIsOpen] = useState(false);
@@ -32,7 +33,7 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <Link href="/">
+              <Link href={appRoutes.home}>
                 <a>
                   <span className="text-white">HOOPSPOTS</span>
                 </a>
@@ -54,7 +55,7 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
                       aria-haspopup="true"
                       onClick={handleProfileDropdownClick}
                     >
-                      {user.profilePhotoUrl ? (
+                      {user && user.profilePhotoUrl ? (
                         <img className="h-8 w-8 rounded-full" src={user.profilePhotoUrl} alt="avatar" />
                       ) : (
                         <svg fill="currentColor" viewBox="0 0 20 20" className="h-8 w-8 text-gray-400">
@@ -68,7 +69,7 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
                     </button>
                   </div>
                 ) : (
-                  <Link href="/api/auth/login" passHref>
+                  <Link href={appRoutes.login} passHref>
                     <StyledLink>Login / Signup</StyledLink>
                   </Link>
                 )}
@@ -93,12 +94,12 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
                     aria-orientation="vertical"
                     aria-labelledby="user-menu"
                   >
-                    <Link href="/profile">
+                    <Link href={appRoutes.profile}>
                       <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
                         Your Profile
                       </a>
                     </Link>
-                    <Link href="/api/auth/logout">
+                    <Link href={appRoutes.logout}>
                       <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
                         Sign out
                       </a>
@@ -141,7 +142,7 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
                 </svg>
               </button>
             ) : (
-              <Link href="/api/auth/login" passHref>
+              <Link href={appRoutes.login} passHref>
                 <StyledLink>Login / Signup</StyledLink>
               </Link>
             )}
@@ -157,7 +158,7 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
         <div className="pt-4 pb-3 border-t border-gray-700">
           <div className="flex items-center px-5">
             <div className="flex-shrink-0">
-              {user.profilePhotoUrl ? (
+              {user && user.profilePhotoUrl ? (
                 <img className="h-10 w-10 rounded-full" src={user.profilePhotoUrl} alt="avatar" />
               ) : (
                 <svg fill="currentColor" viewBox="0 0 20 20" className="h-10 w-10 text-gray-400">
@@ -170,16 +171,16 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
               )}
             </div>
             <div className="ml-3">
-              <div className="text-base font-medium leading-none text-white">{user.name}</div>
+              <div className="text-base font-medium leading-none text-white">{user && user.name}</div>
             </div>
           </div>
           <div className="mt-3 px-2">
-            <Link href="/profile">
+            <Link href={appRoutes.profile}>
               <a className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700">
                 Your Profile
               </a>
             </Link>
-            <Link href="/api/auth/logout">
+            <Link href={appRoutes.logout}>
               <a className="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700">
                 Sign out
               </a>

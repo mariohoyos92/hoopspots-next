@@ -4,21 +4,16 @@ import { NextPage } from 'next';
 import MetaTags from '../components/MetaTags';
 import { useRouter } from 'next/router';
 import GeoCodeAutoComplete from '../components/GeoCodeAutoComplete';
-import placeNameFormatter from '../utils/placeNameFormatter';
-import { createPlace } from '../services/place-service';
+import slugify from '../utils/slugify';
 import Button from '../components/Button';
+import isServer from '../utils/isServer';
 
 const Home: NextPage = () => {
   const router = useRouter();
   const [location, setLocation] = useState(null);
 
   async function handleLocationSelect(mapboxResults: any) {
-    const placeName = placeNameFormatter(mapboxResults['place_name_en-US']);
-    await createPlace({
-      slug: placeName,
-      text: mapboxResults.id.includes('postcode') ? mapboxResults.context[0].text : mapboxResults.text,
-      center: { type: 'Point', coordinates: mapboxResults.center },
-    });
+    const placeName = slugify(mapboxResults['place_name_en-US']);
     setLocation(placeName);
   }
 
@@ -36,7 +31,11 @@ const Home: NextPage = () => {
         <h2>Pickup basketball at your fingertips.</h2>
         <form>
           <p>Enter your city or zip code</p>
-          <GeoCodeAutoComplete id="homepage-search" placeHolder="City or Zip Code" onResult={handleLocationSelect} />
+          {isServer() ? (
+            <input className="mapboxgl-ctrl-geocoder--input" type="text"></input>
+          ) : (
+            <GeoCodeAutoComplete id="homepage-search" placeHolder="City or Zip Code" onResult={handleLocationSelect} />
+          )}
           <Button onClick={handleSubmit} disabled={!location}>
             Find Games
           </Button>
