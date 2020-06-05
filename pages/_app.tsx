@@ -10,27 +10,27 @@ import 'lazysizes/plugins/attrchange/ls.attrchange';
 import '../styles/index.css';
 import { getUserById, createUser } from './api/_repositories/user-repository';
 import connectToMongo from './api/_database-connections/mongoose-connection';
-import { UserFromAuth } from './api/_models/user-model';
+import { UserFromAuth, UserRequestedDoc } from './api/_models/user-model';
 import Nav from '../components/Nav';
+import isServer from '../utils/isServer';
+import { UserProvider } from '../lib/userContext';
+import { getUserProfile } from '../services/user-service';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeError', () => NProgress.done());
 Router.events.on('routeChangeComplete', () => NProgress.done());
 
-class AppWrapper extends App<{}> {
+class AppWrapper extends App<{ user: UserRequestedDoc }> {
   public render() {
     const { Component, pageProps } = this.props;
     return (
       <main>
-        <Nav />
-        <header className="bg-white shadow-sm">
-          <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
-            <h1 className="text-lg leading-6 font-semibold text-gray-900">Dashboard</h1>
+        <UserProvider user={pageProps.user}>
+          <Nav user={pageProps.user} />
+          <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <Component {...pageProps} />
           </div>
-        </header>
-        <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-          <Component {...pageProps} />
-        </div>
+        </UserProvider>
         <style jsx global>
           {`
             #__next {
@@ -100,13 +100,17 @@ async function getOrCreateUserProfileFromAuthUser(user: UserFromAuth) {
 
 AppWrapper.getInitialProps = async appContext => {
   const appProps = await App.getInitialProps(appContext);
-  const response = await auth0.getSession(appContext.ctx.req);
-  const userHasAuth0Account = response && response.user;
   let user;
-  if (userHasAuth0Account) {
-    user = await getOrCreateUserProfileFromAuthUser(response.user as UserFromAuth);
+  if (isServer()) {
+    const response = await auth0.getSession(appContext.ctx.req);
+    const userHasAuth0Account = response && response.user;
+    if (userHasAuth0Account) {
+      user = await getOrCreateUserProfileFromAuthUser(response.user as UserFromAuth);
+    }
+  } else {
+    user = await getUserProfile();
   }
-  return { pageProps: { ...appProps.pageProps, user } };
+  return { pageProps: { user, ...appProps.pageProps } };
 };
 
 export default AppWrapper;

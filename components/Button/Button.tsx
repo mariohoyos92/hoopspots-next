@@ -1,10 +1,6 @@
-import React from 'react';
+import React, { ButtonHTMLAttributes } from 'react';
 
-type Props = {
-  onClick: () => void;
-};
-
-const Button: React.FC<Props> = props => {
+const Button: React.FC<ButtonHTMLAttributes<HTMLButtonElement>> = props => {
   return (
     <button
       {...props}

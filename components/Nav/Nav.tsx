@@ -1,91 +1,77 @@
-import React from 'react';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+import cn from 'classnames';
+import Link from 'next/link';
+import StyledLink from '../StyledLink';
+import { Router } from 'next/router';
+import { UserRequestedDoc } from '../../pages/api/_models/user-model';
 
-interface Props {
-  title?: string;
-  description?: string;
-  image?: string | undefined | boolean;
-}
+const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
+  const [profileDropDownIsOpen, setProfileDropdownIsOpen] = useState(false);
+  const [hamburgerMenuIsOpen, setHamburgerMenuIsOpen] = useState(false);
 
-const Nav: React.FC<Props> = ({}) => {
+  const handleHamburgerClick = () => {
+    setHamburgerMenuIsOpen(!hamburgerMenuIsOpen);
+    setProfileDropdownIsOpen(false);
+  };
+
+  const handleProfileDropdownClick = () => {
+    setProfileDropdownIsOpen(!profileDropDownIsOpen);
+    setHamburgerMenuIsOpen(false);
+  };
+
+  const closeAllDropdowns = () => {
+    setProfileDropdownIsOpen(false);
+    setHamburgerMenuIsOpen(false);
+  };
+
+  Router.events.on('routeChangeComplete', closeAllDropdowns);
+
   return (
     <nav className="bg-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <span className="text-white">HOOPSPOTS</span>
-            </div>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline">
-                <a
-                  href="#"
-                  className="px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700"
-                >
-                  Dashboard
+              <Link href="/">
+                <a>
+                  <span className="text-white">HOOPSPOTS</span>
                 </a>
-                <a
-                  href="#"
-                  className="ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-                >
-                  Team
-                </a>
-                <a
-                  href="#"
-                  className="ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-                >
-                  Projects
-                </a>
-                <a
-                  href="#"
-                  className="ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-                >
-                  Calendar
-                </a>
-                <a
-                  href="#"
-                  className="ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-                >
-                  Reports
-                </a>
-              </div>
+              </Link>
             </div>
           </div>
           <div className="hidden md:block">
             <div className="ml-4 flex items-center md:ml-6">
-              <button
-                className="p-1 border-2 border-transparent text-gray-400 rounded-full hover:text-white focus:outline-none focus:text-white focus:bg-gray-700"
-                aria-label="Notifications"
-              >
-                <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                  />
-                </svg>
-              </button>
-
               {
                 // Profile dropdown
               }
               <div className="ml-3 relative">
-                <div>
-                  <button
-                    className="max-w-xs flex items-center text-sm rounded-full text-white focus:outline-none focus:shadow-solid"
-                    id="user-menu"
-                    aria-label="User menu"
-                    aria-haspopup="true"
-                  >
-                    <img
-                      className="h-8 w-8 rounded-full"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      alt=""
-                    />
-                  </button>
-                </div>
+                {user ? (
+                  <div>
+                    <button
+                      className="max-w-xs flex items-center text-sm rounded-full text-white focus:outline-none focus:shadow-solid"
+                      id="user-menu"
+                      aria-label="User menu"
+                      aria-haspopup="true"
+                      onClick={handleProfileDropdownClick}
+                    >
+                      {user.profilePhotoUrl ? (
+                        <img className="h-8 w-8 rounded-full" src={user.profilePhotoUrl} alt="avatar" />
+                      ) : (
+                        <svg fill="currentColor" viewBox="0 0 20 20" className="h-8 w-8 text-gray-400">
+                          <path
+                            fillRule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                            clipRule="evenodd"
+                          ></path>
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                ) : (
+                  <Link href="/api/auth/login" passHref>
+                    <StyledLink>Login / Signup</StyledLink>
+                  </Link>
+                )}
                 {
                   // Profile dropdown panel, show/hide based on dropdown state.
                   // Entering: "transition ease-out duration-100"
@@ -95,22 +81,28 @@ const Nav: React.FC<Props> = ({}) => {
                   //   From: "transform opacity-100 scale-100"
                   //   To: "transform opacity-0 scale-95"
                 }
-                <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg">
+                <div
+                  className={cn(
+                    { hidden: !profileDropDownIsOpen },
+                    'origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg'
+                  )}
+                >
                   <div
                     className="py-1 rounded-md bg-white shadow-xs"
                     role="menu"
                     aria-orientation="vertical"
                     aria-labelledby="user-menu"
                   >
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Your Profile
-                    </a>
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Settings
-                    </a>
-                    <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                      Sign out
-                    </a>
+                    <Link href="/profile">
+                      <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                        Your Profile
+                      </a>
+                    </Link>
+                    <Link href="/api/auth/logout">
+                      <a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                        Sign out
+                      </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -120,20 +112,39 @@ const Nav: React.FC<Props> = ({}) => {
             {
               // Mobile menu button -->
             }
-            <button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white">
-              {
-                // Menu open: "hidden", Menu closed: "block" -->
-              }
-              <svg className="block h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-              {
-                // Menu open: "block", Menu closed: "hidden" -->
-              }
-              <svg className="hidden h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            {user ? (
+              <button
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white"
+                onClick={handleHamburgerClick}
+              >
+                {
+                  // Menu open: "hidden", Menu closed: "block" -->
+                }
+                <svg
+                  className={cn({ hidden: hamburgerMenuIsOpen, block: !hamburgerMenuIsOpen }, 'h-6 w-6')}
+                  stroke="currentColor"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                {
+                  // Menu open: "block", Menu closed: "hidden" -->
+                }
+                <svg
+                  className={cn({ block: hamburgerMenuIsOpen, hidden: !hamburgerMenuIsOpen }, 'h-6 w-6')}
+                  stroke="currentColor"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            ) : (
+              <Link href="/api/auth/login" passHref>
+                <StyledLink>Login / Signup</StyledLink>
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -142,72 +153,37 @@ const Nav: React.FC<Props> = ({}) => {
         //Mobile menu, toggle classes based on menu state.
         //  Open: "block", closed: "hidden"
       }
-      <div className="hidden md:hidden">
-        <div className="px-2 pt-2 pb-3 sm:px-3">
-          <a
-            href="#"
-            className="block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-900 focus:outline-none focus:text-white focus:bg-gray-700"
-          >
-            Dashboard
-          </a>
-          <a
-            href="#"
-            className="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-          >
-            Team
-          </a>
-          <a
-            href="#"
-            className="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-          >
-            Projects
-          </a>
-          <a
-            href="#"
-            className="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-          >
-            Calendar
-          </a>
-          <a
-            href="#"
-            className="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-          >
-            Reports
-          </a>
-        </div>
+      <div className={cn({ hidden: !hamburgerMenuIsOpen, block: hamburgerMenuIsOpen }, 'md:hidden')}>
         <div className="pt-4 pb-3 border-t border-gray-700">
           <div className="flex items-center px-5">
             <div className="flex-shrink-0">
-              <img
-                className="h-10 w-10 rounded-full"
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                alt=""
-              />
+              {user.profilePhotoUrl ? (
+                <img className="h-10 w-10 rounded-full" src={user.profilePhotoUrl} alt="avatar" />
+              ) : (
+                <svg fill="currentColor" viewBox="0 0 20 20" className="h-10 w-10 text-gray-400">
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+              )}
             </div>
             <div className="ml-3">
-              <div className="text-base font-medium leading-none text-white">Tom Cook</div>
-              <div className="mt-1 text-sm font-medium leading-none text-gray-400">tom@example.com</div>
+              <div className="text-base font-medium leading-none text-white">{user.name}</div>
             </div>
           </div>
           <div className="mt-3 px-2">
-            <a
-              href="#"
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-            >
-              Your Profile
-            </a>
-            <a
-              href="#"
-              className="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-            >
-              Settings
-            </a>
-            <a
-              href="#"
-              className="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700"
-            >
-              Sign out
-            </a>
+            <Link href="/profile">
+              <a className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700">
+                Your Profile
+              </a>
+            </Link>
+            <Link href="/api/auth/logout">
+              <a className="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700">
+                Sign out
+              </a>
+            </Link>
           </div>
         </div>
       </div>

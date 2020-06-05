@@ -17,6 +17,7 @@
         "@typescript-eslint/explicit-function-return-type": [
             "off"
         ],
+        "@typescript-eslint/ban-ts-ignore": "off",
         "indent": "off",
         "func-names": "off", // stop complaining about func names in nightwatch, stack trace is fine.
         "@typescript-eslint/indent": [
