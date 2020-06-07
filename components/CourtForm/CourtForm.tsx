@@ -16,7 +16,7 @@ const INDOOR_OUTDOOR_NAME = 'indoorOutdoor';
 const PUBLIC_PRIVATE_NAME = 'publicPrivate';
 const DESCRIPTION_NAME = 'description';
 
-const CourtForm: React.FC<{ onFormSelect: (courtId: string) => void }> = ({ onFormSelect }) => {
+const CourtForm: React.FC<{ onCourtSelect: (courtId: string) => void }> = ({ onCourtSelect }) => {
   const [form, setForm] = useState(initialValues);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const { courtName, publicPrivate, indoorOutdoor, description } = form;
@@ -25,6 +25,8 @@ const CourtForm: React.FC<{ onFormSelect: (courtId: string) => void }> = ({ onFo
     e.preventDefault();
 
     const court = await createCourt(({ ...form, geoLocationData: selectedAddress } as unknown) as CreateCourtParams);
+    console.log({ court });
+    onCourtSelect(court.id);
   }
 
   function handleChange(e) {

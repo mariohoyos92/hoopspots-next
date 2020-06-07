@@ -8,6 +8,7 @@ import 'lazysizes';
 import 'lazysizes/plugins/attrchange/ls.attrchange';
 
 import '../styles/index.css';
+import 'react-datepicker/dist/react-datepicker.css';
 import { getUserById, createUser } from './api/_repositories/user-repository';
 import connectToMongo from './api/_database-connections/mongoose-connection';
 import { UserFromAuth, UserRequestedDoc } from './api/_models/user-model';
