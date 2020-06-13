@@ -3,6 +3,7 @@ import MapBoxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 import slugify from '../../utils/slugify';
 import { createPlace } from '../../services/place-service';
+import { setToStorage } from '../../utils/browserStorageHelpers';
 
 type MapBoxDataType =
   | 'country'
@@ -42,6 +43,12 @@ const GeoCodeAutoComplete: React.FC<Props> = ({ placeHolder, id, onResult, types
           center: { type: 'Point', coordinates: result.center },
           mapboxId: result.id,
           mapboxPlaceName: result['place_name_en-US'],
+        });
+        setToStorage({
+          type: 'localStorage',
+          key: 'lastSearchedLocation',
+          value: result,
+          expiry: { unit: 'days', value: 365 },
         });
         onResult(result);
       });

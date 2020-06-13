@@ -1,61 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NextPage } from 'next';
 import MetaTags from '../../components/MetaTags';
-import { UserRequestedDoc } from '../api/_models/user-model';
 import CourtForm from '../../components/CourtForm';
 import GameForm from '../../components/GameForm';
+import isServer from '../../utils/isServer';
+import { getLastSearchedLocation } from '../../utils/browserStorageHelpers';
+import { getCourts } from '../../services/court-service';
+import { MapboxAddressFields, CourtRequestedDoc } from '../api/_models/court-model';
+import { LeftArrow } from '../../components/Icons/LeftArrow';
+import { scrollToTop } from '../../utils/scrollToTop';
 
-const NewGamePage: NextPage<{ user: UserRequestedDoc }> = ({ user }) => {
-  const [selectedCourtId, setSelectedCourtId] = useState(null);
-  function onCourtSelect(courtId: string) {}
+const NewGamePage: NextPage<{ courtsNearLocation?: [CourtRequestedDoc] }> = ({ courtsNearLocation }) => {
+  const [selectedCourt, setSelectedCourt] = useState(null);
+  const [showGameCard, setShowGameCard] = useState(false);
+  const [fetchedClientSideCourtsNearLocation, setFetchedClientSideCourtsNearLocation] = useState(null);
+
+  const setCourtsNearUserClientside = async () => {
+    const courtsNearUser = await getCourtOptionsNearLastSearchedLocation();
+    setFetchedClientSideCourtsNearLocation(courtsNearUser);
+  };
+
+  useEffect(() => {
+    setCourtsNearUserClientside();
+  }, []);
+
+  function onCourtSelect(court) {
+    setCourtsNearUserClientside();
+    setSelectedCourt(court);
+    setShowGameCard(true);
+  }
+
+  function handleBackToCourt() {
+    setShowGameCard(false);
+    scrollToTop();
+  }
+
   return (
     <>
       <MetaTags title={'home title'} description={'this is a description'} />
-      <div>
-        <div className="md:grid md:grid-cols-3 md:gap-6">
-          <div className="md:col-span-1">
-            <div className="px-4 sm:px-0">
-              <h2 className="text-lg font-medium leading-6 text-gray-900">Court info</h2>
-              <p className="mt-1 text-sm leading-5 text-gray-600">
-                Are you playing in your driveway, indoor gym, or somewhere else? Find or create your court.
-              </p>
-            </div>
-          </div>
-          <div className="mt-5 md:mt-0 md:col-span-2">
-            <CourtForm onCourtSelect={courtId => console.log(courtId)} />
-          </div>
-        </div>
-      </div>
-
-      <div className="hidden sm:block">
-        <div className="py-5">
-          <div className="border-t border-gray-200"></div>
-        </div>
-      </div>
-
-      <div className="mt-10 sm:mt-0">
-        <div className="md:grid md:grid-cols-3 md:gap-6">
-          <div className="md:col-span-1">
-            <div className="px-4 sm:px-0">
-              <h3 className="text-lg font-medium leading-6 text-gray-900">Game info</h3>
-              <p className="mt-1 text-sm leading-5 text-gray-600">
-                Are you planning on playing 5v5? Full-court? Tell us here!
-              </p>
-            </div>
-          </div>
-          <div className="mt-5 md:mt-0 md:col-span-2">
-            <GameForm />
-          </div>
-        </div>
-      </div>
-
-      <div className="hidden sm:block">
-        <div className="py-5">
-          <div className="border-t border-gray-200"></div>
-        </div>
-      </div>
+      {!selectedCourt || !showGameCard ? (
+        <CourtForm
+          onCourtSelect={onCourtSelect}
+          courtsNearUser={courtsNearLocation || fetchedClientSideCourtsNearLocation}
+          selectedCourt={selectedCourt}
+        />
+      ) : (
+        <>
+          <button className="flex items-center mb-6" onClick={handleBackToCourt}>
+            <LeftArrow />
+            <span className="ml-2"> Back to court selection</span>
+          </button>
+          <GameForm court={selectedCourt} />
+        </>
+      )}
     </>
   );
+};
+
+async function getCourtOptionsNearLastSearchedLocation(): Promise<[CourtRequestedDoc] | undefined> {
+  const lastSearchedLocation = getLastSearchedLocation() as MapboxAddressFields;
+  let courtsNearLocation;
+  if (lastSearchedLocation) {
+    // @ts-ignore
+    courtsNearLocation = await getCourts((lastSearchedLocation.center as unknown) as Coordinates);
+  }
+  return courtsNearLocation;
+}
+
+NewGamePage.getInitialProps = async () => {
+  let courtsNearLocation;
+  if (!isServer()) {
+    courtsNearLocation = await getCourtOptionsNearLastSearchedLocation();
+  }
+  return { courtsNearLocation };
 };
 
 export default NewGamePage;

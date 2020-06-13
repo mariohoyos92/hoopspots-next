@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import schemaOptions from './helpers/schema-options';
 import { SchemaDefinition, MongoProps } from './helpers/types';
 import pointSchema, { Point } from './point-schema';
+import { Game, GameSchema } from './game-model';
 
 export type MapboxAddressFields = {
   id: string;
@@ -18,6 +19,7 @@ export type Court = {
   indoorOutdoor: ['indoor', 'outdoor', 'both_or_multiple'];
   publicPrivate: ['public', 'private'];
   slug: string;
+  games: [Game?];
 };
 
 // _id and __v are created by the database, and are transparent to the user.
@@ -39,6 +41,7 @@ const courtDefinition: SchemaDefinition<Court> = {
   indoorOutdoor: { type: String, required: true },
   publicPrivate: { type: String, required: true },
   slug: { type: String, require: true, index: true, unique: true },
+  games: [GameSchema],
 } as const; // as const is important here for typescript to infer the required type correctly.
 
 const CourtSchema = new mongoose.Schema(courtDefinition, schemaOptions);

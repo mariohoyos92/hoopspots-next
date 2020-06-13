@@ -14,6 +14,7 @@ export const connectToMongo = async () => {
       reconnectTries: Number.MAX_VALUE,
       autoReconnect: true,
       useCreateIndex: true,
+      useFindAndModify: false,
     });
     mongoose.connection.on('error', err => {
       console.error(err);

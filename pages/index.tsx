@@ -32,7 +32,7 @@ const Home: NextPage = () => {
         <form>
           <p>Enter your city or zip code</p>
           {isServer() ? (
-            <input className="mapboxgl-ctrl-geocoder--input" type="text"></input>
+            <SSRPlaceHolder />
           ) : (
             <GeoCodeAutoComplete id="homepage-search" placeHolder="City or Zip Code" onResult={handleLocationSelect} />
           )}
@@ -44,5 +44,13 @@ const Home: NextPage = () => {
     </>
   );
 };
+
+function SSRPlaceHolder() {
+  return (
+    <div className="mapboxgl-ctrl-geocoder mapboxgl-ctrl">
+      <input type="text" className="mapboxgl-ctrl-geocoder--input"></input>
+    </div>
+  );
+}
 
 export default Home;

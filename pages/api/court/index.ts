@@ -1,6 +1,6 @@
 import { NowRequest, NowResponse } from '@now/node';
 import connectToMongoose from '../_database-connections/mongoose-connection';
-import { getAllCourts, createCourt } from '../_repositories/court-repository';
+import { getAllCourts, createCourt, getCourtsNearLocation, Coordinates } from '../_repositories/court-repository';
 import { CreateCourtParams } from '../../../services/court-service';
 import slugify from '../../../utils/slugify';
 import auth0 from '../../../lib/auth0';
@@ -12,8 +12,13 @@ function createCourtSlug(court: CreateCourtParams) {
 export default async (req: NowRequest, res: NowResponse) => {
   await connectToMongoose();
   if (req.method === 'GET') {
+    if (req.query['coordinates[]']) {
+      // @ts-ignore
+      const courts = await getCourtsNearLocation(req.query['coordinates[]']?.map(parseFloat));
+      return res.status(200).json(courts);
+    }
     const courts = await getAllCourts();
-    res.json({ courts });
+    return res.json(courts);
   }
   if (req.method === 'POST') {
     const court = req.body as CreateCourtParams;

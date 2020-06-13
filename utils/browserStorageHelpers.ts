@@ -22,7 +22,7 @@ export const getExpiry = (expiry: Expiry, currentTime: number = Date.now()) => {
   return currentTime + additionalTime;
 };
 
-export type CurrentlyUsedKeys = 'example' | 'another example';
+export type CurrentlyUsedKeys = 'lastSearchedLocation';
 
 type GetFromStorageArgs = {
   type: BrowserStorageType;
@@ -99,3 +99,5 @@ export const removeFromStorage = ({ type, key }: GetFromStorageArgs) => {
     return false;
   }
 };
+
+export const getLastSearchedLocation = () => getFromStorage({ type: 'localStorage', key: 'lastSearchedLocation' });
