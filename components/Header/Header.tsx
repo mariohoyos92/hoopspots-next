@@ -3,8 +3,13 @@ import { useRouter } from 'next/router';
 import appRoutes from '../../types/Routes';
 import { Place } from '../../pages/api/_models/place-model';
 import { User } from '../../pages/api/_models/user-model';
+import { GameWithCourtInfo } from '../../pages/api/_repositories/game-repository';
 
-const Header: React.FC<{ placeInfo?: Place; user?: User }> = ({ placeInfo, user }) => {
+const Header: React.FC<{ placeInfo?: Place; user?: User; gameInfo?: GameWithCourtInfo }> = ({
+  placeInfo,
+  user,
+  gameInfo,
+}) => {
   const router = useRouter();
   const routesWithNoHeader = [appRoutes.home];
 
@@ -14,6 +19,8 @@ const Header: React.FC<{ placeInfo?: Place; user?: User }> = ({ placeInfo, user 
         return placeInfo ? `Games in ${placeInfo.text}` : `Couldn't find this place`;
       case appRoutes.profile:
         return `${user.name}'s profile`;
+      case appRoutes.gameDetails:
+        return gameInfo ? gameInfo.gameName : "Couldn't find that game";
       default:
         break;
     }

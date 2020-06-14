@@ -5,6 +5,7 @@ export const appRoutes = {
   home: '/',
   gameFinder: '/gamefinder/[slug]',
   newGame: '/game/new',
+  gameDetails: '/game/[slug]',
 };
 
 export default appRoutes;

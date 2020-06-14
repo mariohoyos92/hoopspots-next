@@ -24,9 +24,10 @@ const CourtForm: React.FC<{
   courtsNearUser?: [CourtRequestedDoc];
   selectedCourt?: CourtRequestedDoc;
 }> = ({ onCourtSelect, courtsNearUser, selectedCourt }) => {
-  console.log({ selectedCourt });
   const [form, setForm] = useState(initialValues);
-  const [selectedPremadeCourt, setSelectedPremadeCourt] = useState(selectedCourt);
+  const [selectedPremadeCourt, setSelectedPremadeCourt] = useState(
+    selectedCourt || courtsNearUser ? courtsNearUser[0] : null
+  );
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [submittingCourt, setSubmittingCourt] = useState(false);
 
@@ -74,7 +75,7 @@ const CourtForm: React.FC<{
       </div>
       <div className="mt-5 md:mt-0 md:col-span-2">
         {courtsNearUser?.length > 0 && (
-          <form onSubmit={handlePremadeCourtSubmit}>
+          <form>
             <div className="shadow sm:rounded-md sm:overflow-hidden">
               <div className="px-4 py-5 bg-white sm:p-6">
                 <label htmlFor={EXISTING_COURT_NAME} className="block text-md font-medium leading-6 text-gray-900">
@@ -86,7 +87,7 @@ const CourtForm: React.FC<{
                   className="mt-1 block form-select w-full py-2 px-3 py-0 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                   name={EXISTING_COURT_NAME}
                   onChange={handlePremadeCourtSelect}
-                  value={selectedPremadeCourt?._id}
+                  value={selectedPremadeCourt?._id || courtsNearUser[0]._id}
                 >
                   {courtsNearUser.map(court => (
                     <option value={court._id} key={court._id}>
@@ -97,7 +98,7 @@ const CourtForm: React.FC<{
               </div>
               <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
                 <span className="inline-flex rounded-md shadow-sm">
-                  <Button type="submit" disabled={submittingCourt}>
+                  <Button type="submit" disabled={submittingCourt} onClick={handlePremadeCourtSubmit}>
                     Use this court
                   </Button>
                 </span>

@@ -11,14 +11,16 @@ import { useRouter } from 'next/router';
 import appRoutes from '../../types/Routes';
 import { CourtRequestedDoc } from '../api/_models/court-model';
 import { stringifyForNext } from '../../utils/stringifyForNext';
+import { getGamesWithCourtInfo, GameWithCourtInfo } from '../api/_repositories/game-repository';
 
 type Props = {
   placeInfo: Place;
   user?: User;
   courts?: [CourtRequestedDoc];
+  games?: [GameWithCourtInfo];
 };
 
-const GameFinder: NextPage<Props> = ({ placeInfo, user, courts }) => {
+const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
   const router = useRouter();
   async function handleCreateGame() {
     router.push(user ? appRoutes.newGame : appRoutes.login);
@@ -36,8 +38,8 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts }) => {
 export async function getServerSideProps({ query }) {
   const placeInfo = stringifyForNext(await getPlaceBySlug(query.slug as string));
   const courts = stringifyForNext(await getCourtsNearLocation(placeInfo.center.coordinates));
-
-  return { props: { courts, placeInfo } };
+  const games = stringifyForNext(await getGamesWithCourtInfo(courts));
+  return { props: { courts, placeInfo, games } };
 }
 
 export default GameFinder;

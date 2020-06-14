@@ -9,6 +9,7 @@ export type RSVP = {
 };
 
 export type Game = {
+  courtId: string;
   gameName: string;
   startTime: Date;
   endTime: Date;
@@ -28,6 +29,7 @@ export const rsvpFieldsDefinition: SchemaDefinition<RSVP> = {
 };
 
 const GameDefinition: SchemaDefinition<Game> = {
+  courtId: { type: String, required: true, index: true },
   gameName: { type: String, required: true },
   startTime: { type: Date, required: true, min: new Date() },
   endTime: { type: Date, required: true },
@@ -38,3 +40,6 @@ const GameDefinition: SchemaDefinition<Game> = {
 } as const; // as const is important here for typescript to infer the required type correctly.
 
 export const GameSchema = new mongoose.Schema(GameDefinition, schemaOptions);
+
+export default (mongoose.models && mongoose.models.Game) ||
+  mongoose.model<Game & mongoose.Document>('Game', GameSchema);

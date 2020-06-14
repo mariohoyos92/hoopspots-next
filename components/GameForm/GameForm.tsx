@@ -7,6 +7,7 @@ import { checkDateInput } from '../../utils/checkDateInput';
 import { useRouter } from 'next/router';
 import InputLabel from '../InputLabel';
 import { CourtRequestedDoc } from '../../pages/api/_models/court-model';
+import appRoutes from '../../types/Routes';
 
 const initialValues = {
   gameName: '',
@@ -51,7 +52,7 @@ const GameForm: React.FC<{ court: CourtRequestedDoc }> = ({ court }) => {
       courtId: court._id,
     });
 
-    // router.push(`/game/[slug]`, `/game/${game.slug}`);
+    router.push(appRoutes.gameDetails, `/game/${game.slug}`);
   }
 
   function handleChange(e) {
