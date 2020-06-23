@@ -8,7 +8,7 @@ export const createGame = async (game: Game) => {
   return createdGame;
 };
 
-export type GameWithCourtInfo = GameRequestedDoc & { courtDetails: CourtRequestedDoc };
+export type GameWithCourtInfo = GameRequestedDoc & { courtDetails: [CourtRequestedDoc] };
 
 export const getGameBySlug = async (slug: string): Promise<GameWithCourtInfo> => {
   const game = await GameModel.findOne({ slug })
@@ -19,8 +19,9 @@ export const getGameBySlug = async (slug: string): Promise<GameWithCourtInfo> =>
 };
 
 export const getGamesWithCourtInfo = async (courts: [CourtRequestedDoc]) => {
+  // startTime: { $gte: new Date() }
   const gamesWithCourtInfo = await GameModel.aggregate([
-    { $match: { courtId: { $in: courts.map(({ _id }) => _id) }, startTime: { $gte: new Date() } } },
+    { $match: { courtId: { $in: courts.map(({ _id }) => _id) } } },
     { $sort: { startTime: 1 } },
     {
       $lookup: {

@@ -16,7 +16,7 @@ const Header: React.FC<{ placeInfo?: Place; user?: User; gameInfo?: GameWithCour
   function determineHeaderContent() {
     switch (router.pathname) {
       case appRoutes.gameFinder:
-        return placeInfo ? `Games in ${placeInfo.text}` : `Couldn't find this place`;
+        return placeInfo ? `Games near ${placeInfo.text}` : `Couldn't find this place`;
       case appRoutes.profile:
         return `${user.name}'s profile`;
       case appRoutes.gameDetails:

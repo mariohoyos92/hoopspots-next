@@ -3,7 +3,7 @@ export const appRoutes = {
   logout: '/api/auth/logout',
   profile: '/profile',
   home: '/',
-  gameFinder: '/gamefinder/[slug]',
+  gameFinder: '/games/[slug]',
   newGame: '/game/new',
   gameDetails: '/game/[slug]',
 };

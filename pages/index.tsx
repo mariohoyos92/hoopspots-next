@@ -20,7 +20,7 @@ const Home: NextPage = () => {
   async function handleSubmit(e: SyntheticEvent) {
     e.preventDefault();
     if (location) {
-      router.push(`/gamefinder/[slug]`, `/gamefinder/${location}`);
+      router.push(`/games/[slug]`, `/games/${location}`);
     }
   }
   return (
