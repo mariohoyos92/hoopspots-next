@@ -29,7 +29,7 @@ const Header: React.FC<{ placeInfo?: Place; user?: User; gameInfo?: GameWithCour
   return !routesWithNoHeader.includes(router.pathname) ? (
     appRoutes.newGame === router.pathname ? (
       <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
           <h1 className="text-xl leading-6 font-semibold text-gray-900">
             New Game{' '}
             <span role="img" aria-label="basketball">
@@ -41,7 +41,7 @@ const Header: React.FC<{ placeInfo?: Place; user?: User; gameInfo?: GameWithCour
       </header>
     ) : (
       <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
           <h1 className="text-lg leading-6 font-semibold text-gray-900">{determineHeaderContent()}</h1>
         </div>
       </header>

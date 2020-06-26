@@ -18,6 +18,7 @@ import { UserProvider } from '../lib/userContext';
 import { getUserProfile } from '../services/user-service';
 import Header from '../components/Header';
 import { getRouteBeforeLeavingToLogIn, removeFromStorage } from '../utils/browserStorageHelpers';
+import { Colors } from '../types/Colors';
 
 Router.events.on('routeChangeStart', () => NProgress.start());
 Router.events.on('routeChangeError', () => NProgress.done());
@@ -49,7 +50,7 @@ const AppWrapper = (props: AppProps<{ user?: UserRequestedDoc }>) => {
         <Nav user={pageProps.user} />
         <Header {...pageProps} />
         <main>
-          <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+          <div className="max-w-5xl mx-auto sm:px-6 lg:px-8">
             <div className="px-4 py-8 sm:px-0">
               <Component {...pageProps} />
             </div>
@@ -76,7 +77,7 @@ const AppWrapper = (props: AppProps<{ user?: UserRequestedDoc }>) => {
           }
 
           #nprogress .bar {
-            background: #017c6b;
+            background: ${Colors.red};
 
             position: fixed;
             z-index: 1031;

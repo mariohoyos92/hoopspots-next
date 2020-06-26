@@ -190,7 +190,7 @@ const CourtForm: React.FC<{
                       placeholder={
                         publicPrivate === 'private'
                           ? "Include instructions for how to access private court like 'Pay $5 dollars at the door for day pass'"
-                          : "Add anything else hoopers might care about like 'This is an elementary school so only available after-school'"
+                          : 'This is an elementary school so only available after-school'
                       }
                       onChange={handleChange}
                       required

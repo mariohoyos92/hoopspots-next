@@ -5,6 +5,7 @@ import StyledLink from '../StyledLink';
 import { Router } from 'next/router';
 import { UserRequestedDoc } from '../../pages/api/_models/user-model';
 import appRoutes from '../../types/Routes';
+import { Colors } from '../../types/Colors';
 
 const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
   const [profileDropDownIsOpen, setProfileDropdownIsOpen] = useState(false);
@@ -28,8 +29,8 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
   Router.events.on('routeChangeComplete', closeAllDropdowns);
 
   return (
-    <nav className="bg-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav style={{ background: Colors.black }}>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
