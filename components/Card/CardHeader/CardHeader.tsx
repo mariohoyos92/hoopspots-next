@@ -1,14 +1,14 @@
 import React from 'react';
 import cx from 'classnames';
 
-export const CardHeaderWithDescription: React.FC<{ title: string; description: string; className?: string }> = ({
+export const CardHeader: React.FC<{ title: string; description?: string; className?: string }> = ({
   title,
   description,
   className,
 }) => (
   <div className={`bg-white px-4 py-5 border-b border-gray-200 sm:px-6 ${className}`}>
     <h3 className="text-lg leading-6 font-medium text-gray-900">{title}</h3>
-    <p className="mt-1 text-sm leading-5 text-gray-500">{description}</p>
+    {description ? <p className="mt-1 text-sm leading-5 text-gray-500">{description}</p> : null}
   </div>
 );
 

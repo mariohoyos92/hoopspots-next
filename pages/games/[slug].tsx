@@ -17,6 +17,9 @@ import GameCard from '../../components/GameCard/GameCard';
 import { compareAsc, compareDesc } from 'date-fns';
 import GeoCodeAutoComplete from '../../components/GeoCodeAutoComplete';
 import slugify from '../../utils/slugify';
+import Card from '../../components/Card/Card';
+import { CardHeader } from '../../components/Card/CardHeader/CardHeader';
+import CardBody from '../../components/Card/CardBody';
 
 type Props = {
   placeInfo: Place;
@@ -74,6 +77,8 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
   }
 
   const distanceOptions = [10, 20, 30, 40];
+  const hasUpcomingGames = upcomingGames?.length > 0;
+  const hasPastGames = pastGames?.length > 0;
 
   return (
     <>
@@ -93,7 +98,7 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
             >
               {distanceOptions.map(distance => (
                 <option value={distance} key={distance}>
-                  {distance} miles from
+                  {distance} miles of
                 </option>
               ))}
             </select>
@@ -103,10 +108,26 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
       </div>
       <div className="flex justify-between w-full items-center mb-5">
         <h2 className="text-lg leading-6 font-semibold text-gray-900">Upcoming games</h2>
-        <Button onClick={handleCreateGame}>Create game</Button>
+        {hasUpcomingGames ? <Button onClick={handleCreateGame}>Create game</Button> : null}
       </div>
-      {upcomingGames?.length > 0 ? upcomingGames.map(game => <GameCard game={game} key={game._id} />) : <p>no game</p>}
-      {pastGames?.length > 0 ? (
+      {hasUpcomingGames ? (
+        upcomingGames.map(game => <GameCard game={game} key={game._id} />)
+      ) : (
+        <Card>
+          <CardBody>
+            <div className="flex flex-col items-center">
+              <h3 className="text-lg leading-6 font-medium text-gray-900 text-center mb-2">
+                No games here yet, which means you get to be the first!{' '}
+                <span role="img" aria-label="basketball">
+                  🏀
+                </span>
+              </h3>
+              <Button onClick={handleCreateGame}>Create game</Button>
+            </div>
+          </CardBody>
+        </Card>
+      )}
+      {hasPastGames ? (
         <>
           <h2 className="text-lg leading-6 font-semibold text-gray-900 mb-5">Past games</h2>
           {pastGames.map(game => (
@@ -114,9 +135,11 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
           ))}
         </>
       ) : null}
-      <Button className="float-right mb-5" onClick={handleCreateGame}>
-        Create game
-      </Button>
+      {hasUpcomingGames && hasPastGames ? (
+        <Button className="float-right mb-5" onClick={handleCreateGame}>
+          Create game
+        </Button>
+      ) : null}
     </>
   );
 };

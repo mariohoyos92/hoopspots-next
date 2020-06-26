@@ -24,8 +24,8 @@ const NewGamePage: NextPage<{ courtsNearLocation?: [CourtRequestedDoc] }> = ({ c
     setCourtsNearUserClientside();
   }, []);
 
-  function onCourtSelect(court) {
-    setCourtsNearUserClientside();
+  async function onCourtSelect(court) {
+    await setCourtsNearUserClientside();
     setSelectedCourt(court);
     setShowGameCard(true);
   }

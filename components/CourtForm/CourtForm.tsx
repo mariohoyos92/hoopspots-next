@@ -170,15 +170,15 @@ const CourtForm: React.FC<{
                       onChange={handleChange}
                       className="mt-1 block form-select w-full py-2 px-3 py-0 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                     >
-                      <option value="public">Public</option>
-                      <option value="private">Private</option>
+                      <option value="public">Public - think playground</option>
+                      <option value="private">Private - think paid gym</option>
                     </select>
                   </div>
                 </div>
 
                 <div className="mt-6">
                   <label htmlFor={DESCRIPTION_NAME} className="block text-sm leading-5 font-medium text-gray-700">
-                    Description
+                    Description*
                   </label>
                   <div className="rounded-md shadow-sm">
                     <textarea
@@ -187,8 +187,13 @@ const CourtForm: React.FC<{
                       rows={3}
                       value={description}
                       className="form-textarea mt-1 block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                      placeholder="Add anything else hoopers might care about like 'This is an elementary school so only available after-school'"
+                      placeholder={
+                        publicPrivate === 'private'
+                          ? "Include instructions for how to access private court like 'Pay $5 dollars at the door for day pass'"
+                          : "Add anything else hoopers might care about like 'This is an elementary school so only available after-school'"
+                      }
                       onChange={handleChange}
+                      required
                     ></textarea>
                   </div>
                 </div>
