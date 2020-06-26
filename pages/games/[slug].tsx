@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import { NextPage } from 'next';
 import MetaTags from '../../components/MetaTags';
 import { getPlaceBySlug } from '../api/_repositories/place-repository';
@@ -16,7 +16,7 @@ import { setToStorage } from '../../utils/browserStorageHelpers';
 import GameCard from '../../components/GameCard/GameCard';
 import { compareAsc, compareDesc } from 'date-fns';
 import GeoCodeAutoComplete from '../../components/GeoCodeAutoComplete';
-import isServer from '../../utils/isServer';
+import slugify from '../../utils/slugify';
 
 type Props = {
   placeInfo: Place;
@@ -26,8 +26,9 @@ type Props = {
 };
 
 const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
-  console.log({ placeInfo, user, courts, games });
   const router = useRouter();
+
+  const [distance, setDistance] = useState(router.query.distance || 20);
 
   async function handleCreateGame() {
     if (!user) {
@@ -56,6 +57,24 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
       .filter(game => new Date(game.startTime) < new Date())
       .sort((a, b) => compareDesc(new Date(a.startTime), new Date(b.startTime)));
 
+  function handleDistanceChange(e: ChangeEvent<HTMLSelectElement>) {
+    setDistance(e.target.value);
+    router.push(
+      { pathname: appRoutes.gameFinder, query: { distance: e.target.value, slug: router.query.slug } },
+      `/games/${placeInfo.slug}?distance=${e.target.value}`
+    );
+  }
+
+  function handleLocationChange(mapboxResults: any) {
+    const placeName = slugify(mapboxResults['place_name_en-US']);
+    router.push(
+      { pathname: appRoutes.gameFinder, query: { distance: distance, slug: placeName } },
+      `/games/${placeName}?distance=${distance}`
+    );
+  }
+
+  const distanceOptions = [10, 20, 30, 40];
+
   return (
     <>
       <MetaTags title={'game finder'} description={'place to find courts'} />
@@ -69,23 +88,24 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
             <select
               id="distance"
               className="my-2 form-select block w-full pl-3 pr-10 py-2 text-base leading-6 border-gray-300 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5"
+              onChange={handleDistanceChange}
+              value={distance}
             >
-              <option value={10}>10 miles from</option>
-              <option value={20}>20 miles from</option>
-              <option value={30}>30 miles from</option>
-              <option value={40}>40 miles from</option>
+              {distanceOptions.map(distance => (
+                <option value={distance} key={distance}>
+                  {distance} miles from
+                </option>
+              ))}
             </select>
           </div>
-          <GeoCodeAutoComplete id="game-finder-lookup" placeHolder={placeInfo.text} onResult={console.log} />
+          <GeoCodeAutoComplete id="game-finder-lookup" placeHolder={placeInfo.text} onResult={handleLocationChange} />
         </div>
       </div>
       <div className="flex justify-between w-full items-center mb-5">
         <h2 className="text-lg leading-6 font-semibold text-gray-900">Upcoming games</h2>
         <Button onClick={handleCreateGame}>Create game</Button>
       </div>
-      {upcomingGames.map(game => (
-        <GameCard game={game} key={game._id} />
-      ))}
+      {upcomingGames?.length > 0 ? upcomingGames.map(game => <GameCard game={game} key={game._id} />) : <p>no game</p>}
       {pastGames?.length > 0 ? (
         <>
           <h2 className="text-lg leading-6 font-semibold text-gray-900 mb-5">Past games</h2>
@@ -103,7 +123,7 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
 
 export async function getServerSideProps({ query }) {
   const placeInfo = stringifyForNext(await getPlaceBySlug(query.slug as string));
-  const courts = stringifyForNext(await getCourtsNearLocation(placeInfo.center.coordinates));
+  const courts = stringifyForNext(await getCourtsNearLocation(placeInfo.center.coordinates, query.distance));
   const games = stringifyForNext(await getGamesWithCourtInfo(courts));
   return { props: { courts, placeInfo, games } };
 }

@@ -84,7 +84,7 @@ const CourtForm: React.FC<{
 
                 <select
                   id={EXISTING_COURT_NAME}
-                  className="mt-1 block form-select w-full py-2 px-3 py-0 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                  className="mt-1 block form-select w-full px-3 py-0 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                   name={EXISTING_COURT_NAME}
                   onChange={handlePremadeCourtSelect}
                   value={selectedPremadeCourt?._id || courtsNearUser[0]._id}
