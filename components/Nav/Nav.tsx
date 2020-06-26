@@ -36,7 +36,7 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
             <div className="flex-shrink-0">
               <Link href={appRoutes.home}>
                 <a>
-                  <span className="text-white">HOOPSPOTS</span>
+                  <span className="text-white">HS</span>
                 </a>
               </Link>
             </div>
