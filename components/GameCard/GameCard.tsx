@@ -4,10 +4,11 @@ import { GameWithCourtInfo, GamesWithCourtInfo } from '../../pages/api/_reposito
 import Card from '../Card/Card';
 import Link from 'next/link';
 import appRoutes from '../../types/Routes';
-import { CardHeaderWithAvatars } from '../Card/CardHeader/CardHeader';
+import { GameCardHeader } from '../Card/CardHeader/CardHeader';
 
 type Props = {
   game: GameWithCourtInfo;
+  distance: number | string;
 };
 
 export function getGameDate(game: GamesWithCourtInfo | GameWithCourtInfo) {
@@ -28,7 +29,7 @@ export function getGameTimeLong(game: GameWithCourtInfo | GameWithCourtInfo) {
   return gameTime;
 }
 
-const GameCard: React.FC<Props> = ({ game }) => {
+const GameCard: React.FC<Props> = ({ game, distance }) => {
   const { rsvps, slug } = game;
   const gameTime = getGameTime(game);
 
@@ -36,10 +37,12 @@ const GameCard: React.FC<Props> = ({ game }) => {
     <Link href={appRoutes.gameDetails} as={`/game/${slug}`}>
       <a>
         <Card className="mb-5">
-          <CardHeaderWithAvatars
+          <GameCardHeader
             title={game.gameName}
             description={gameTime}
             avatarUrls={rsvps.map(({ profilePhotoUrl }) => profilePhotoUrl)}
+            courtName={game.courtDetails[0].courtName}
+            miles={distance}
           />
         </Card>
       </a>

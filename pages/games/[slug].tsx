@@ -20,6 +20,7 @@ import slugify from '../../utils/slugify';
 import Card from '../../components/Card/Card';
 import CardBody from '../../components/Card/CardBody';
 import BasketballEmoji from '../../components/Icons/BasketballEmoji';
+import { getMiles } from '../../utils/distanceConversions';
 
 type Props = {
   placeInfo: Place;
@@ -59,6 +60,12 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
     games
       .filter(game => new Date(game.startTime) < new Date())
       .sort((a, b) => compareDesc(new Date(a.startTime), new Date(b.startTime)));
+
+  const getCourtDistance = (gameCourtId: string) => {
+    const gameCourt = courts.find(({ _id }) => gameCourtId === _id);
+    console.log({ name: gameCourt.courtName, distance: getMiles(gameCourt.distanceInMeters).toFixed(1) || '0' });
+    return getMiles(gameCourt.distanceInMeters).toFixed(1) || '0';
+  };
 
   function handleDistanceChange(e: ChangeEvent<HTMLSelectElement>) {
     setDistance(e.target.value);
@@ -111,7 +118,7 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
         {hasUpcomingGames ? <Button onClick={handleCreateGame}>Create game</Button> : null}
       </div>
       {hasUpcomingGames ? (
-        upcomingGames.map(game => <GameCard game={game} key={game._id} />)
+        upcomingGames.map(game => <GameCard game={game} key={game._id} distance={getCourtDistance(game.courtId)} />)
       ) : (
         <Card>
           <CardBody>
@@ -128,7 +135,7 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
         <>
           <h2 className="text-lg leading-6 font-semibold text-gray-900 mb-5">Past games</h2>
           {pastGames.map(game => (
-            <GameCard game={game} key={game._id} />
+            <GameCard game={game} key={game._id} distance={getCourtDistance(game.courtId)} />
           ))}
         </>
       ) : null}

@@ -17,6 +17,7 @@ import Link from 'next/link';
 import Clock from '../../components/Icons/Clock';
 import ClickToCopy from '../../components/ClickToCopy';
 import { uppercaseFirst } from '../../utils/uppercaseFirst';
+import PlayerCard from '../../components/PlayerCard';
 
 type Props = {
   gameInfo: GameWithCourtInfo;
@@ -41,7 +42,8 @@ const GameDetails: NextPage<Props> = ({ user, gameInfo, hostInfo }) => {
         <CardBody>
           <div className="text-gray-500 mb-1">{gameDate}</div>
           <h1 className="text-3xl tracking-tight leading-10 font-extrabold text-gray-900 mb-4">
-            {gameName} at {courtName}
+            {gameName}
+            {/* <span className="text-gray-400 font-extrabold">@</span> {courtName} */}
           </h1>
           <div className="flex items-center">
             <Avatar imageUrl={hostInfo.profilePhotoUrl} size="10" className="mr-4" />
@@ -110,6 +112,19 @@ const GameDetails: NextPage<Props> = ({ user, gameInfo, hostInfo }) => {
         </div>
         The Hoopers ({rsvps.length})
       </h2>
+      <div className="flex overflow-x-auto flex-no-wrap scrolling-touch">
+        {rsvps.map(({ name, profilePhotoUrl, playsLike, feet, inches, position }) => (
+          <div className="mr-2">
+            <PlayerCard
+              name={name}
+              imageUrl={profilePhotoUrl}
+              playsLike={playsLike}
+              height={feet && inches ? `${feet}'-${inches}"` : ''}
+              position={position}
+            />
+          </div>
+        ))}
+      </div>
     </>
   );
 };
