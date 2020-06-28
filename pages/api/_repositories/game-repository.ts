@@ -8,13 +8,14 @@ export const createGame = async (game: Game) => {
   return createdGame;
 };
 
-export type GameWithCourtInfo = GameRequestedDoc & { courtDetails: [CourtRequestedDoc] };
+export type GamesWithCourtInfo = GameRequestedDoc & { courtDetails: [CourtRequestedDoc] };
+export type GameWithCourtInfo = GameRequestedDoc & { courtDetails: CourtRequestedDoc };
 
 export const getGameBySlug = async (slug: string): Promise<GameWithCourtInfo> => {
   const game = await GameModel.findOne({ slug })
     .lean()
     .exec();
-  const courtDetails = await CourtModel.findOne({ courtId: game.courtId });
+  const courtDetails = await CourtModel.findById(game.courtId);
   return { ...game, courtDetails: courtDetails };
 };
 

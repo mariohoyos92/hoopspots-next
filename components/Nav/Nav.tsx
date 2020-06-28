@@ -35,8 +35,10 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <Link href={appRoutes.home}>
-                <a>
-                  <span className="text-white">HS</span>
+                <a className="font-bold text-3xl md:text-4xl">
+                  <span className="text-white">
+                    H<span className="text-red-600">S</span>
+                  </span>
                 </a>
               </Link>
             </div>

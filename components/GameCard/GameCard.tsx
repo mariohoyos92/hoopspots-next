@@ -1,6 +1,6 @@
 import React from 'react';
 import { format } from 'date-fns';
-import { GameWithCourtInfo } from '../../pages/api/_repositories/game-repository';
+import { GameWithCourtInfo, GamesWithCourtInfo } from '../../pages/api/_repositories/game-repository';
 import Card from '../Card/Card';
 import Link from 'next/link';
 import appRoutes from '../../types/Routes';
@@ -10,17 +10,27 @@ type Props = {
   game: GameWithCourtInfo;
 };
 
-function getGameTime(game: GameWithCourtInfo) {
+export function getGameDate(game: GamesWithCourtInfo | GameWithCourtInfo) {
+  return format(new Date(game.startTime), '	EEEE, MMMM do, y');
+}
+
+export function getGameTime(game: GameWithCourtInfo | GameWithCourtInfo) {
   const startTime = format(new Date(game.startTime), 'E MMM do, y ha');
   const endTime = format(new Date(game.endTime), 'ha');
   const gameTime = `${startTime} - ${endTime}`;
   return gameTime;
 }
 
+export function getGameTimeLong(game: GameWithCourtInfo | GameWithCourtInfo) {
+  const startTime = format(new Date(game.startTime), 'h:mm aaa');
+  const endTime = format(new Date(game.endTime), 'h:mm aaa');
+  const gameTime = `${startTime} - ${endTime}`;
+  return gameTime;
+}
+
 const GameCard: React.FC<Props> = ({ game }) => {
-  const { description, courtDetails, rsvps, slug } = game;
+  const { rsvps, slug } = game;
   const gameTime = getGameTime(game);
-  const court = courtDetails[0];
 
   return (
     <Link href={appRoutes.gameDetails} as={`/game/${slug}`}>
@@ -31,19 +41,6 @@ const GameCard: React.FC<Props> = ({ game }) => {
             description={gameTime}
             avatarUrls={rsvps.map(({ profilePhotoUrl }) => profilePhotoUrl)}
           />
-          {/* <CardBody>
-            <CardInfo>
-              <CardInfoSection isFirst title="Court name">
-                {court.courtName}
-              </CardInfoSection>
-              <CardInfoSection title="Court address">{court.geoLocationData.placeName}</CardInfoSection>
-              <CardInfoSection title="Hoopers going">
-                {rsvps.map(r => (
-                  <p>{r.name}</p>
-                ))}
-              </CardInfoSection>
-            </CardInfo>
-          </CardBody> */}
         </Card>
       </a>
     </Link>

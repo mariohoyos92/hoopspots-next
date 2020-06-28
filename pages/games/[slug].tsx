@@ -11,21 +11,21 @@ import { useRouter } from 'next/router';
 import appRoutes from '../../types/Routes';
 import { CourtRequestedDoc } from '../api/_models/court-model';
 import { stringifyForNext } from '../../utils/stringifyForNext';
-import { getGamesWithCourtInfo, GameWithCourtInfo } from '../api/_repositories/game-repository';
+import { getGamesWithCourtInfo, GamesWithCourtInfo } from '../api/_repositories/game-repository';
 import { setToStorage } from '../../utils/browserStorageHelpers';
 import GameCard from '../../components/GameCard/GameCard';
 import { compareAsc, compareDesc } from 'date-fns';
 import GeoCodeAutoComplete from '../../components/GeoCodeAutoComplete';
 import slugify from '../../utils/slugify';
 import Card from '../../components/Card/Card';
-import { CardHeader } from '../../components/Card/CardHeader/CardHeader';
 import CardBody from '../../components/Card/CardBody';
+import BasketballEmoji from '../../components/Icons/BasketballEmoji';
 
 type Props = {
   placeInfo: Place;
   user?: User;
   courts?: [CourtRequestedDoc];
-  games?: [GameWithCourtInfo];
+  games?: [GamesWithCourtInfo];
 };
 
 const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
@@ -117,10 +117,7 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
           <CardBody>
             <div className="flex flex-col items-center">
               <h3 className="text-lg leading-6 font-medium text-gray-900 text-center mb-2">
-                No games here yet, which means you get to be the first!{' '}
-                <span role="img" aria-label="basketball">
-                  🏀
-                </span>
+                No games here yet, which means you get to be the first! <BasketballEmoji />
               </h3>
               <Button onClick={handleCreateGame}>Create game</Button>
             </div>

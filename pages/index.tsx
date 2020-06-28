@@ -26,30 +26,32 @@ const Home: NextPage = () => {
   return (
     <>
       <MetaTags title={'home title'} description={'this is a description'} />
-      <div
-        data-testid="home-container"
-        className="flex flex-col items-center mt-10"
-        style={{ height: 'calc(100vh - 64px - 4rem)' }}
-      >
-        <h1 className="text-5xl text-center">HoopSpots</h1>
-        <h2 className="text-center mb-4">Pickup basketball near you</h2>
-        <form className="flex flex-col justify-center items-center">
-          {isServer() ? (
-            <SSRPlaceHolder />
-          ) : (
-            <div className="mb-4">
-              <GeoCodeAutoComplete
-                id="homepage-search"
-                placeHolder="City or Zip Code"
-                onResult={handleLocationSelect}
-              />
-            </div>
-          )}
-          <Button onClick={handleSubmit} disabled={!location}>
-            Find Games
-          </Button>
-        </form>
-      </div>
+      <main className="mt-10 mx-auto max-w-screen-xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 xl:mt-28">
+        <div className="text-center">
+          <h1 className="text-4xl tracking-tight leading-10 font-extrabold text-gray-900 sm:text-5xl sm:leading-none md:text-6xl">
+            Hoop<span className="text-red-600">Spots</span>
+          </h1>
+          <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+            Pickup basketball near you.
+          </p>
+          <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
+            {isServer() ? (
+              <SSRPlaceHolder />
+            ) : (
+              <div>
+                <GeoCodeAutoComplete
+                  id="homepage-search"
+                  placeHolder="City or Zip Code"
+                  onResult={handleLocationSelect}
+                />
+              </div>
+            )}
+            <Button onClick={handleSubmit} disabled={!location} className="w-full mt-4 sm:mt-0 sm:ml-4">
+              Find Games
+            </Button>
+          </div>
+        </div>
+      </main>
     </>
   );
 };
