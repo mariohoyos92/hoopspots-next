@@ -13,7 +13,7 @@ const Home: NextPage = () => {
   const [location, setLocation] = useState(null);
 
   async function handleLocationSelect(mapboxResults: any) {
-    const placeName = slugify(mapboxResults['place_name_en-US']);
+    const placeName = slugify(mapboxResults.mapboxPlaceName);
     setLocation(placeName);
   }
 

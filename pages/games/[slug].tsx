@@ -76,7 +76,7 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
   }
 
   function handleLocationChange(mapboxResults: any) {
-    const placeName = slugify(mapboxResults['place_name_en-US']);
+    const placeName = slugify(mapboxResults.mapboxPlaceName);
     router.push(
       { pathname: appRoutes.gameFinder, query: { distance: distance, slug: placeName } },
       `/games/${placeName}?distance=${distance}`

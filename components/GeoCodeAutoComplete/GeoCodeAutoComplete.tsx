@@ -36,13 +36,14 @@ const GeoCodeAutoComplete: React.FC<Props> = ({ placeHolder, id, onResult, types
         types: (types && types.join(',')) || 'place,postcode',
       });
       GeoCoder.on('result', async ({ result }) => {
-        const placeName = slugify(result['place_name_en-US']);
+        const mapboxPlaceName = result['place_name_en-US'] || result['place_name_en-us'];
+        const placeName = slugify(mapboxPlaceName);
         await createPlace({
           slug: placeName,
           text: result.id.includes('postcode') ? result.context[0].text : result.text,
           center: { type: 'Point', coordinates: result.center },
           mapboxId: result.id,
-          mapboxPlaceName: result['place_name_en-US'],
+          mapboxPlaceName,
         });
         setToStorage({
           type: 'localStorage',
@@ -50,6 +51,7 @@ const GeoCodeAutoComplete: React.FC<Props> = ({ placeHolder, id, onResult, types
           value: result,
           expiry: { unit: 'days', value: 365 },
         });
+        result.mapboxPlaceName = mapboxPlaceName;
         onResult(result);
       });
       GeoCoder.addTo(`#${id}`);

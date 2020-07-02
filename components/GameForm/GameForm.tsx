@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { format } from 'date-fns';
+import { format, setHours, setMinutes } from 'date-fns';
 import Button from '../Button';
 import DatePicker from 'react-datepicker';
 import { createGame } from '../../services/game-service';
@@ -27,14 +27,20 @@ const GameForm: React.FC<{ court: CourtRequestedDoc }> = ({ court }) => {
   const [form, setForm] = useState(initialValues);
   const router = useRouter();
   const { gameName, startTime, date, endTime, description } = form;
-  console.log({ form });
 
   function createStartTime() {
-    return new Date(`${date}, ${startTime}`);
+    return startTime instanceof Date
+      ? setHours(setMinutes(date, startTime.getMinutes()), startTime.getHours())
+      : new Date(`${date}, ${startTime}`);
   }
+
   function createEndTime() {
-    const splitEndTime = endTime.split(':');
-    return new Date(createStartTime().setHours(parseInt(splitEndTime[0]), parseInt(splitEndTime[1])));
+    if (endTime instanceof Date) {
+      return setHours(setMinutes(date, endTime.getMinutes()), endTime.getHours());
+    } else {
+      const splitEndTime = endTime.split(':');
+      return new Date(createStartTime().setHours(parseInt(splitEndTime[0]), parseInt(splitEndTime[1])));
+    }
   }
 
   async function handleSubmit(e) {
@@ -59,7 +65,12 @@ const GameForm: React.FC<{ court: CourtRequestedDoc }> = ({ court }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
+  function handleDatePickerDate(date: Date, field: string) {
+    setForm({ ...form, [field]: date });
+  }
+
   const supportsDateAndTimePickers = checkDateInput();
+  const now = new Date();
 
   return (
     <div className="md:grid md:grid-cols-3 md:gap-6">
@@ -94,7 +105,6 @@ const GameForm: React.FC<{ court: CourtRequestedDoc }> = ({ court }) => {
                   {
                     // TODO: ABSTRACT SOME OF THIS ANNOYING ASS LOGIC AWAY
                     // TODO: maybe make this for all desktops?
-                    // The safari fallback changehandler works differently, so account for that
                   }
                   {supportsDateAndTimePickers ? (
                     <input
@@ -110,8 +120,10 @@ const GameForm: React.FC<{ court: CourtRequestedDoc }> = ({ court }) => {
                     />
                   ) : (
                     <DatePicker
-                      selected={date || undefined}
-                      onChange={handleChange}
+                      selected={date ? new Date(date) : undefined}
+                      minDate={now}
+                      name={DATE_NAME}
+                      onChange={selectedDate => handleDatePickerDate(selectedDate, DATE_NAME)}
                       className="mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                     />
                   )}
@@ -119,7 +131,7 @@ const GameForm: React.FC<{ court: CourtRequestedDoc }> = ({ court }) => {
 
                 <div className="col-span-6 sm:col-span-3">
                   <InputLabel htmlFor={START_TIME_NAME}>Start time*</InputLabel>
-                  {checkDateInput() ? (
+                  {supportsDateAndTimePickers ? (
                     <input
                       id={START_TIME_NAME}
                       name={START_TIME_NAME}
@@ -131,23 +143,51 @@ const GameForm: React.FC<{ court: CourtRequestedDoc }> = ({ court }) => {
                       className="mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                     />
                   ) : (
-                    'Does not support datetime'
+                    <DatePicker
+                      selected={startTime ? new Date(startTime) : undefined}
+                      minTime={now}
+                      maxTime={setHours(now, 23)}
+                      onChange={selectedTime => handleDatePickerDate(selectedTime, START_TIME_NAME)}
+                      name={END_TIME_NAME}
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={5}
+                      className="mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                      timeCaption="Time"
+                      dateFormat="h:mm aa"
+                    />
                   )}
                 </div>
 
                 <div className="col-span-6 sm:col-span-3">
                   <InputLabel htmlFor={END_TIME_NAME}>End time*</InputLabel>
-                  <input
-                    id={END_TIME_NAME}
-                    name={END_TIME_NAME}
-                    min={startTime}
-                    type="time"
-                    required
-                    value={endTime}
-                    onChange={handleChange}
-                    max="24:00"
-                    className="mt-1 block form-select w-full py-2 px-3 py-0 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                  />
+                  {supportsDateAndTimePickers ? (
+                    <input
+                      id={END_TIME_NAME}
+                      name={END_TIME_NAME}
+                      min={startTime}
+                      type="time"
+                      required
+                      value={endTime}
+                      onChange={handleChange}
+                      max="24:00"
+                      className="mt-1 block form-select w-full py-2 px-3 py-0 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                    />
+                  ) : (
+                    <DatePicker
+                      selected={endTime ? new Date(endTime) : undefined}
+                      minTime={startTime ? new Date(startTime) : now}
+                      maxTime={setHours(now, 23)}
+                      onChange={selectedTime => handleDatePickerDate(selectedTime, END_TIME_NAME)}
+                      name={END_TIME_NAME}
+                      showTimeSelect
+                      showTimeSelectOnly
+                      timeIntervals={5}
+                      className="mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                      timeCaption="Time"
+                      dateFormat="h:mm aa"
+                    />
+                  )}
                 </div>
               </div>
               <div className="mt-6">

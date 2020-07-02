@@ -50,7 +50,7 @@ const CourtForm: React.FC<{
       id: mapboxResult.id,
       center: mapboxResult.center,
       text: mapboxResult.text,
-      placeName: mapboxResult['place_name_en-US'],
+      placeName: mapboxResult.mapboxPlaceName,
     });
   }
 
