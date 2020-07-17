@@ -9,3 +9,5 @@ export const LeftArrow = ({ width = 20, height = 20 }) => (
     ></path>
   </svg>
 );
+
+export default LeftArrow;

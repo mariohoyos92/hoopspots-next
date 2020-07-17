@@ -1,9 +1,9 @@
 import { NowRequest, NowResponse } from '@now/node';
 import connectToMongoose from '../_database-connections/mongoose-connection';
-import { getAllCourts, createCourt, getCourtsNearLocation, Coordinates } from '../_repositories/court-repository';
+import { getAllCourts, createCourt, getCourtsNearLocation } from '../_repositories/court-repository';
 import { CreateCourtParams } from '../../../services/court-service';
 import slugify from '../../../utils/slugify';
-import auth0 from '../../../lib/auth0';
+import { getUserFromRequest } from '../_utils/protectedRoute';
 
 function createCourtSlug(court: CreateCourtParams) {
   return `${slugify(court.courtName)}-${slugify(court.geoLocationData.text)}`;
@@ -23,13 +23,10 @@ export default async (req: NowRequest, res: NowResponse) => {
   if (req.method === 'POST') {
     const court = req.body as CreateCourtParams;
     try {
-      const authResponse = await auth0.getSession(req);
-      if (!(authResponse && authResponse.user)) {
-        res.status(401).json('You must be logged in to create a court');
-      }
+      const user = await getUserFromRequest(req, res);
       const createdCourt = await createCourt({
         ...court,
-        createdBy: authResponse.user.sub,
+        createdBy: user.sub,
         slug: createCourtSlug(court),
       });
       res.status(201).json(createdCourt);

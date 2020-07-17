@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default () => (
+const BasketballSVG = () => (
   <svg id="svg3052" viewBox="0 0 330 330" version="1.1">
     <defs id="defs3054">
       <radialGradient
@@ -66,3 +66,5 @@ export default () => (
     </g>
   </svg>
 );
+
+export default BasketballSVG;

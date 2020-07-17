@@ -15,11 +15,6 @@ export default async function userProfile(req, res) {
       }
       res.json(userProfile);
     }
-    if (req.method === 'POST') {
-      const { userInfo } = req.body;
-      const createdUser = await createUser(userInfo);
-      return res.status(200).json(createdUser);
-    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error });

@@ -14,7 +14,7 @@ export type Game = {
   startTime: Date;
   endTime: Date;
   description?: string;
-  rsvps: [RSVP?];
+  rsvps: RSVP[];
   slug: string;
   createdBy: string;
 };

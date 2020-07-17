@@ -18,6 +18,11 @@ import Clock from '../../components/Icons/Clock';
 import ClickToCopy from '../../components/ClickToCopy';
 import { uppercaseFirst } from '../../utils/uppercaseFirst';
 import PlayerCard from '../../components/PlayerCard';
+import Button from '../../components/Button';
+import { useRouter } from 'next/router';
+import { setToStorage } from '../../utils/browserStorageHelpers';
+import appRoutes from '../../types/Routes';
+import { addUserToRSVPS } from '../../services/game-service';
 
 type Props = {
   gameInfo: GameWithCourtInfo;
@@ -25,16 +30,34 @@ type Props = {
   user?: User;
 };
 
-const GameDetails: NextPage<Props> = ({ gameInfo, hostInfo }) => {
+const GameDetails: NextPage<Props> = ({ gameInfo, hostInfo, user }) => {
   const {
     gameName,
     rsvps,
     description: gameDescription,
     courtDetails: { courtName, geoLocationData, description, indoorOutdoor, publicPrivate },
+    slug,
   } = gameInfo;
 
+  const router = useRouter();
   const gameDate = getGameDate(gameInfo);
   const addressPieces = geoLocationData.placeName.split(',');
+  const loggedInUserIsAttending = rsvps.some(rsvp => rsvp.userId === user.userId);
+
+  async function handleRSVP() {
+    if (user.userId) {
+      await addUserToRSVPS(gameInfo._id);
+      router.reload();
+    } else {
+      setToStorage({
+        type: 'localStorage',
+        key: 'routeBeforeLeavingToLogin',
+        value: `/game/${slug}`,
+        expiry: { unit: 'minutes', value: 5 },
+      });
+      return router.push(appRoutes.login);
+    }
+  }
   return (
     <>
       <MetaTags title={'game details'} description={'place to find courts'} />
@@ -99,23 +122,32 @@ const GameDetails: NextPage<Props> = ({ gameInfo, hostInfo }) => {
         </div>
         The Game{' '}
       </h2>
-      <p>
-        <span className="text-md font-semibold">Game description: </span>
-        {uppercaseFirst(gameDescription)}
-        <br />
-        <br />
-        <span className="text-md font-semibold">Court description: </span>
-        {uppercaseFirst(description)}
-      </p>
-      <h2 className="text-lg leading-6 font-semibold text-gray-900 mt-6 mb-4 flex items-center">
-        <div className="inline-block h-5 w-5 mr-1 -mt-1">
-          <UserGroup />
+      <Card>
+        <CardBody>
+          <p>
+            <span className="text-md font-semibold">Game description: </span>
+            {uppercaseFirst(gameDescription)}
+            <br />
+            <br />
+            <span className="text-md font-semibold">Court description: </span>
+            {uppercaseFirst(description)}
+          </p>
+        </CardBody>
+      </Card>
+      <h2 className="text-lg leading-6 font-semibold text-gray-900 mt-6 mb-4 flex items-center justify-between">
+        <div>
+          <div className="inline-block h-5 w-5 mr-1 -mt-1">
+            <UserGroup />
+          </div>
+          The Hoopers ({rsvps.length})
         </div>
-        The Hoopers ({rsvps.length})
+        {user && !loggedInUserIsAttending && new Date() < new Date(gameInfo.startTime) && (
+          <Button onClick={handleRSVP}>Count me in!</Button>
+        )}
       </h2>
       <div className="flex overflow-x-auto flex-no-wrap scrolling-touch">
-        {rsvps.map(({ name, profilePhotoUrl }) => (
-          <div className="mr-2">
+        {rsvps.map(({ name, profilePhotoUrl, userId }) => (
+          <div className="mr-2" key={userId}>
             <PlayerCard name={name} imageUrl={profilePhotoUrl} />
           </div>
         ))}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default () => (
+export const Clock = () => (
   <svg
     fill="none"
     strokeLinecap="round"
@@ -12,3 +12,5 @@ export default () => (
     <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
   </svg>
 );
+
+export default Clock;

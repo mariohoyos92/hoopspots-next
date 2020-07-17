@@ -12,3 +12,7 @@ export function createGame(game: CreateGameParams) {
 export function getGameBySlug(slug: string) {
   return axios.get(baseRoute, { params: { slug } }).then(({ data }) => data);
 }
+
+export function addUserToRSVPS(gameId: string) {
+  return axios.post<GameRequestedDoc>(`/api/rsvp/${gameId}`).then(({ data }) => data);
+}

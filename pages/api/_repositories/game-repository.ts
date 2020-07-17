@@ -1,5 +1,6 @@
 import CourtModel, { CourtRequestedDoc } from '../_models/court-model';
 import GameModel, { Game, GameRequestedDoc } from '../_models/game-model';
+import { getUserById } from './user-repository';
 
 export type CreateGameParams = Omit<Game, 'rsvps'>;
 
@@ -34,4 +35,18 @@ export const getGamesWithCourtInfo = async (courts: [CourtRequestedDoc]) => {
     },
   ]);
   return gamesWithCourtInfo;
+};
+
+export const addRSVP = async (gameId: string, userId: string) => {
+  const userProfile = await getUserById(userId);
+  const updatedGame = await GameModel.findByIdAndUpdate(
+    gameId,
+    {
+      $push: {
+        rsvps: { userId: userProfile.userId, profilePhotoUrl: userProfile.profilePhotoUrl, name: userProfile.name },
+      },
+    },
+    { new: true, lean: true }
+  ).exec();
+  return updatedGame;
 };
