@@ -1,13 +1,15 @@
+/* purgecss start ignore */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* purgecss end ignore */
 
-@import url('https://rsms.me/inter/inter.css');
 html { font-family: 'Inter', sans-serif; }
 @supports (font-variation-settings: normal) {
   html { font-family: 'Inter var', sans-serif; }
 }
 
+/* purgecss start ignore */
 /* MAPBOX CSS */
 /* Basics */
 .mapboxgl-ctrl-geocoder,
@@ -249,3 +251,4 @@ html { font-family: 'Inter', sans-serif; }
   }
 
 }
+/* purgecss end ignore */

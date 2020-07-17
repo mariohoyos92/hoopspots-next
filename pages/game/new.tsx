@@ -57,7 +57,9 @@ const NewGamePage: NextPage<{ courtsNearLocation?: [CourtRequestedDoc] }> = ({ c
   );
 };
 
-async function getCourtOptionsNearLastSearchedLocation(): Promise<[CourtRequestedDoc] | undefined> {
+async function getCourtOptionsNearLastSearchedLocation(): Promise<
+  [CourtRequestedDoc & { distanceInMiles: number }] | undefined
+> {
   const lastSearchedLocation = getLastSearchedLocation() as MapboxAddressFields;
   let courtsNearLocation;
   if (lastSearchedLocation) {

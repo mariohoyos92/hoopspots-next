@@ -9,7 +9,13 @@ import InputLabel from '../InputLabel';
 import { CourtRequestedDoc } from '../../pages/api/_models/court-model';
 import appRoutes from '../../types/Routes';
 
-const initialValues = {
+const initialValues: {
+  gameName: string;
+  date: Date;
+  startTime: string | Date;
+  endTime: string | Date;
+  description: string;
+} = {
   gameName: '',
   date: undefined,
   startTime: '',
@@ -114,7 +120,7 @@ const GameForm: React.FC<{ court: CourtRequestedDoc }> = ({ court }) => {
                       required
                       type="date"
                       onChange={handleChange}
-                      value={date || ''}
+                      value={((date as unknown) as string) || ''}
                       onBlur={handleChange}
                       className="mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                     />
@@ -137,7 +143,7 @@ const GameForm: React.FC<{ court: CourtRequestedDoc }> = ({ court }) => {
                       name={START_TIME_NAME}
                       type="time"
                       required
-                      value={startTime}
+                      value={(startTime as unknown) as string}
                       onChange={handleChange}
                       onBlur={handleChange}
                       className="mt-1 form-input block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
@@ -165,10 +171,10 @@ const GameForm: React.FC<{ court: CourtRequestedDoc }> = ({ court }) => {
                     <input
                       id={END_TIME_NAME}
                       name={END_TIME_NAME}
-                      min={startTime}
+                      min={(startTime as unknown) as string}
                       type="time"
                       required
-                      value={endTime}
+                      value={(endTime as unknown) as string}
                       onChange={handleChange}
                       max="24:00"
                       className="mt-1 block form-select w-full py-2 px-3 py-0 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"

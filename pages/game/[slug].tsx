@@ -25,7 +25,7 @@ type Props = {
   user?: User;
 };
 
-const GameDetails: NextPage<Props> = ({ user, gameInfo, hostInfo }) => {
+const GameDetails: NextPage<Props> = ({ gameInfo, hostInfo }) => {
   const {
     gameName,
     rsvps,
@@ -86,7 +86,8 @@ const GameDetails: NextPage<Props> = ({ user, gameInfo, hostInfo }) => {
                 <ClickToCopy textToCopy={geoLocationData.placeName} />
               </div>
               <div className="font-medium mt-2">
-                {uppercaseFirst(indoorOutdoor)}, {uppercaseFirst(publicPrivate)}
+                {uppercaseFirst((indoorOutdoor as unknown) as string)},{' '}
+                {uppercaseFirst((publicPrivate as unknown) as string)}
               </div>
             </div>
           </div>
@@ -113,15 +114,9 @@ const GameDetails: NextPage<Props> = ({ user, gameInfo, hostInfo }) => {
         The Hoopers ({rsvps.length})
       </h2>
       <div className="flex overflow-x-auto flex-no-wrap scrolling-touch">
-        {rsvps.map(({ name, profilePhotoUrl, playsLike, feet, inches, position }) => (
+        {rsvps.map(({ name, profilePhotoUrl }) => (
           <div className="mr-2">
-            <PlayerCard
-              name={name}
-              imageUrl={profilePhotoUrl}
-              playsLike={playsLike}
-              height={feet && inches ? `${feet}'-${inches}"` : ''}
-              position={position}
-            />
+            <PlayerCard name={name} imageUrl={profilePhotoUrl} />
           </div>
         ))}
       </div>

@@ -16,7 +16,17 @@ export const getAllCourts = (): Promise<CourtRequestedDoc[]> => {
     .exec();
 };
 
-export const getCourtsNearLocation = async (coordinates: Coordinates, distanceInMiles = 20, skip = 0, limit = 100) => {
+export type CourtWithDistanceInformation = CourtRequestedDoc & {
+  distanceInMeters: number;
+  locationUsedForCalculation: Coordinates;
+};
+
+export const getCourtsNearLocation = async (
+  coordinates: Coordinates,
+  distanceInMiles = 20,
+  skip = 0,
+  limit = 100
+): Promise<[CourtWithDistanceInformation]> => {
   const courts = await CourtModel.aggregate([
     {
       $geoNear: {

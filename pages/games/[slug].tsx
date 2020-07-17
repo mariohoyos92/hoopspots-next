@@ -3,15 +3,14 @@ import { NextPage } from 'next';
 import MetaTags from '../../components/MetaTags';
 import { getPlaceBySlug } from '../api/_repositories/place-repository';
 
-import { getCourtsNearLocation } from '../api/_repositories/court-repository';
+import { getCourtsNearLocation, CourtWithDistanceInformation } from '../api/_repositories/court-repository';
 import { Place } from '../api/_models/place-model';
 import Button from '../../components/Button/Button';
 import { User } from '../api/_models/user-model';
 import { useRouter } from 'next/router';
 import appRoutes from '../../types/Routes';
-import { CourtRequestedDoc } from '../api/_models/court-model';
 import { stringifyForNext } from '../../utils/stringifyForNext';
-import { getGamesWithCourtInfo, GamesWithCourtInfo } from '../api/_repositories/game-repository';
+import { getGamesWithCourtInfo, GameWithCourtInfo } from '../api/_repositories/game-repository';
 import { setToStorage } from '../../utils/browserStorageHelpers';
 import GameCard from '../../components/GameCard/GameCard';
 import { compareAsc, compareDesc } from 'date-fns';
@@ -25,8 +24,8 @@ import { getMiles } from '../../utils/distanceConversions';
 type Props = {
   placeInfo: Place;
   user?: User;
-  courts?: [CourtRequestedDoc];
-  games?: [GamesWithCourtInfo];
+  courts?: [CourtWithDistanceInformation];
+  games?: [GameWithCourtInfo];
 };
 
 const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {

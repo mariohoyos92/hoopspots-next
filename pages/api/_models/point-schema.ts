@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 export type Point = {
   type: 'Point';
-  coordinates: number[];
+  coordinates: [number, number];
 };
 
 const pointSchema = new mongoose.Schema({

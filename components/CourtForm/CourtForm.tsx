@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import GeoCodeAutoComplete from '../GeoCodeAutoComplete';
 import Button from '../Button';
 import { createCourt, CreateCourtParams } from '../../services/court-service';
-import { CourtRequestedDoc } from '../../pages/api/_models/court-model';
+import { CourtWithDistanceInformation } from '../../pages/api/_repositories/court-repository';
 import { getMiles } from '../../utils/distanceConversions';
 
 const initialValues = {
@@ -20,9 +20,9 @@ const DESCRIPTION_NAME = 'description';
 const EXISTING_COURT_NAME = 'existingCourt';
 
 const CourtForm: React.FC<{
-  onCourtSelect: (court: CourtRequestedDoc) => void;
-  courtsNearUser?: [CourtRequestedDoc];
-  selectedCourt?: CourtRequestedDoc;
+  onCourtSelect: (court: CourtWithDistanceInformation) => void;
+  courtsNearUser?: [CourtWithDistanceInformation];
+  selectedCourt?: CourtWithDistanceInformation;
 }> = ({ onCourtSelect, courtsNearUser, selectedCourt }) => {
   const [form, setForm] = useState(initialValues);
   const [selectedPremadeCourt, setSelectedPremadeCourt] = useState(

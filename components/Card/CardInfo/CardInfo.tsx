@@ -23,3 +23,5 @@ export const CardInfoSection: React.FC<{ title: string; isFirst?: boolean }> = (
     </div>
   );
 };
+
+export default CardInfo;
