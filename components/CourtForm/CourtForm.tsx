@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import GeoCodeAutoComplete from '../GeoCodeAutoComplete';
 import Button from '../Button';
 import { createCourt, CreateCourtParams } from '../../services/court-service';
 import { CourtWithDistanceInformation } from '../../pages/api/_repositories/court-repository';
 import { getMiles } from '../../utils/distanceConversions';
+import CourtCard from '../CourtCard';
 
 const initialValues = {
   courtName: '',
@@ -31,6 +32,11 @@ const CourtForm: React.FC<{
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [submittingCourt, setSubmittingCourt] = useState(false);
 
+  useEffect(() => {
+    if (selectedCourt) {
+      setSelectedPremadeCourt(selectedCourt);
+    }
+  }, [selectedCourt]);
   const { courtName, publicPrivate, indoorOutdoor, description } = form;
 
   async function handleSubmit(e) {
@@ -75,36 +81,44 @@ const CourtForm: React.FC<{
       </div>
       <div className="mt-5 md:mt-0 md:col-span-2">
         {courtsNearUser?.length > 0 && (
-          <form>
-            <div className="shadow sm:rounded-md sm:overflow-hidden">
-              <div className="px-4 py-5 bg-white sm:p-6">
-                <label htmlFor={EXISTING_COURT_NAME} className="block text-md font-medium leading-6 text-gray-900">
-                  Existing court
-                </label>
+          <>
+            <form>
+              <div className="shadow sm:rounded-md sm:overflow-hidden">
+                <div className="px-4 py-5 bg-white sm:p-6">
+                  <label htmlFor={EXISTING_COURT_NAME} className="block text-md font-medium leading-6 text-gray-900">
+                    Existing court
+                  </label>
 
-                <select
-                  id={EXISTING_COURT_NAME}
-                  className="mt-1 block form-select w-full px-3 py-0 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
-                  name={EXISTING_COURT_NAME}
-                  onChange={handlePremadeCourtSelect}
-                  value={selectedPremadeCourt?._id || courtsNearUser[0]._id}
-                >
-                  {courtsNearUser.map(court => (
-                    <option value={court._id} key={court._id}>
-                      {court.courtName} - {`${getMiles(court.distanceInMeters).toFixed(1)} miles away`}
-                    </option>
-                  ))}
-                </select>
+                  <select
+                    id={EXISTING_COURT_NAME}
+                    className="mt-1 block form-select w-full px-3 py-0 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
+                    name={EXISTING_COURT_NAME}
+                    onChange={handlePremadeCourtSelect}
+                    value={selectedPremadeCourt?._id || courtsNearUser[0]._id}
+                  >
+                    {courtsNearUser.map(court => (
+                      <option value={court._id} key={court._id}>
+                        {court.courtName} - {`${getMiles(court.distanceInMeters).toFixed(1)} miles away`}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {selectedPremadeCourt && (
+                  <div className="bg-white px-4 pb-5">
+                    <CourtCard court={selectedPremadeCourt} />
+                  </div>
+                )}
+                <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                  <span className="inline-flex rounded-md shadow-sm">
+                    <Button type="submit" disabled={submittingCourt} onClick={handlePremadeCourtSubmit}>
+                      Use this court
+                    </Button>
+                  </span>
+                </div>
               </div>
-              <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                <span className="inline-flex rounded-md shadow-sm">
-                  <Button type="submit" disabled={submittingCourt} onClick={handlePremadeCourtSubmit}>
-                    Use this court
-                  </Button>
-                </span>
-              </div>
-            </div>
-          </form>
+            </form>
+            <div className="text-xl my-5">OR </div>
+          </>
         )}
         <div className="mt-5 md:col-span-2">
           <form onSubmit={handleSubmit}>

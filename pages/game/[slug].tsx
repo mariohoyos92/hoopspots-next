@@ -8,14 +8,12 @@ import { stringifyForNext } from '../../utils/stringifyForNext';
 import Card from '../../components/Card/Card';
 import CardBody from '../../components/Card/CardBody';
 import { getGameDate, getGameTimeLong } from '../../components/GameCard/GameCard';
-import LocationMarker from '../../components/Icons/LocationMarker';
 import BasketballSvg from '../../components/Icons/BasketballSvg';
 import UserGroup from '../../components/Icons/UserGroup';
 import { getUserById } from '../api/_repositories/user-repository';
 import Avatar from '../../components/Avatar';
 import Link from 'next/link';
 import Clock from '../../components/Icons/Clock';
-import ClickToCopy from '../../components/ClickToCopy';
 import { uppercaseFirst } from '../../utils/uppercaseFirst';
 import PlayerCard from '../../components/PlayerCard';
 import Button from '../../components/Button';
@@ -23,6 +21,7 @@ import { useRouter } from 'next/router';
 import { setToStorage } from '../../utils/browserStorageHelpers';
 import appRoutes from '../../types/Routes';
 import { addUserToRSVPS } from '../../services/game-service';
+import CourtCard from '../../components/CourtCard';
 
 type Props = {
   gameInfo: GameWithCourtInfo;
@@ -31,17 +30,10 @@ type Props = {
 };
 
 const GameDetails: NextPage<Props> = ({ gameInfo, hostInfo, user }) => {
-  const {
-    gameName,
-    rsvps,
-    description: gameDescription,
-    courtDetails: { courtName, geoLocationData, description, indoorOutdoor, publicPrivate },
-    slug,
-  } = gameInfo;
+  const { gameName, rsvps, description: gameDescription, courtDetails, slug } = gameInfo;
 
   const router = useRouter();
   const gameDate = getGameDate(gameInfo);
-  const addressPieces = geoLocationData.placeName.split(',');
   const loggedInUserIsAttending = rsvps.some(rsvp => rsvp.userId === user.userId);
 
   async function handleRSVP() {
@@ -93,27 +85,7 @@ const GameDetails: NextPage<Props> = ({ gameInfo, hostInfo, user }) => {
               {getGameTimeLong(gameInfo)}
             </div>
           </div>
-          <div className="flex">
-            <div className="h-5 w-5 mr-2 mt-1 text-gray-400">
-              <LocationMarker />
-            </div>
-            <div>
-              <span className="font-medium">{courtName}</span>
-              <br />
-              {addressPieces[0]}
-              <br />
-              <div className="flex">
-                <span className="mr-2">
-                  {addressPieces[1]}, {addressPieces[2]}
-                </span>{' '}
-                <ClickToCopy textToCopy={geoLocationData.placeName} />
-              </div>
-              <div className="font-medium mt-2">
-                {uppercaseFirst((indoorOutdoor as unknown) as string)},{' '}
-                {uppercaseFirst((publicPrivate as unknown) as string)}
-              </div>
-            </div>
-          </div>
+          <CourtCard court={courtDetails} />
         </CardBody>
       </Card>
       <h2 className="text-lg leading-6 font-semibold text-gray-900 mt-6 mb-4 flex items-center">
@@ -130,7 +102,7 @@ const GameDetails: NextPage<Props> = ({ gameInfo, hostInfo, user }) => {
             <br />
             <br />
             <span className="text-md font-semibold">Court description: </span>
-            {uppercaseFirst(description)}
+            {uppercaseFirst(courtDetails.description)}
           </p>
         </CardBody>
       </Card>

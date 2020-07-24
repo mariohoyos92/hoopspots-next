@@ -32,7 +32,7 @@ const Home: NextPage = () => {
             Hoop<span className="text-red-600">Spots</span>
           </h1>
           <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-            Pickup basketball near you.
+            Pickup basketball at your fingertips.
           </p>
           <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
             {isServer() ? (

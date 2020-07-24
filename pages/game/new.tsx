@@ -18,6 +18,7 @@ const NewGamePage: NextPage<{ courtsNearLocation?: [CourtRequestedDoc] }> = ({ c
   const setCourtsNearUserClientside = async () => {
     const courtsNearUser = await getCourtOptionsNearLastSearchedLocation();
     setFetchedClientSideCourtsNearLocation(courtsNearUser);
+    setSelectedCourt(courtsNearUser[0]);
   };
 
   useEffect(() => {

@@ -119,7 +119,7 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
       {hasUpcomingGames ? (
         upcomingGames.map(game => <GameCard game={game} key={game._id} distance={getCourtDistance(game.courtId)} />)
       ) : (
-        <Card>
+        <Card className="mb-5">
           <CardBody>
             <div className="flex flex-col items-center">
               <h3 className="text-lg leading-6 font-medium text-gray-900 text-center mb-2">
