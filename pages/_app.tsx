@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
+import '../styles/index.css';
+import 'lazysizes';
+import 'lazysizes/plugins/attrchange/ls.attrchange';
 import App, { AppProps } from 'next/app';
+import GoogleFonts from 'next-google-fonts';
 import Router, { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import auth0 from '../lib/auth0';
 
-import 'lazysizes';
-import 'lazysizes/plugins/attrchange/ls.attrchange';
-
-import '../styles/index.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import { getUserById, createUser } from './api/_repositories/user-repository';
 import connectToMongo from './api/_database-connections/mongoose-connection';
@@ -46,6 +46,7 @@ const AppWrapper = (props: AppProps<{ user?: UserRequestedDoc }>) => {
 
   return (
     <div className="page-container bg-gray-100">
+      <GoogleFonts href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" />
       <UserProvider user={pageProps.user}>
         <Nav user={pageProps.user} />
         <Header {...pageProps} />

@@ -1,13 +1,6 @@
-/* purgecss start ignore */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/* purgecss end ignore */
-
-html { font-family: 'Inter', sans-serif; }
-@supports (font-variation-settings: normal) {
-  html { font-family: 'Inter var', sans-serif; }
-}
 
 /* purgecss start ignore */
 /* MAPBOX CSS */
