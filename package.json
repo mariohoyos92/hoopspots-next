@@ -21,7 +21,7 @@
     "date-fns": "^2.14.0",
     "lazysizes": "^5.2.2",
     "mongoose": "^5.9.16",
-    "next": "^9.4.5-canary.28",
+    "next": "^9.5.0",
     "next-google-fonts": "^1.2.1",
     "nprogress": "^0.2.0",
     "react": "16.12.0",
