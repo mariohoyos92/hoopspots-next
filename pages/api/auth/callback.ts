@@ -5,7 +5,7 @@ export default async function callback(req, res) {
     console.log('AUTH CALLBACK FUNCTION');
     console.log(req);
     await auth0.handleCallback(req, res, {
-      redirectTo: '/profile',
+      redirectTo: '/me',
     });
   } catch (error) {
     console.error(error);

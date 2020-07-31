@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import '../styles/index.css';
 import 'lazysizes';
 import 'lazysizes/plugins/attrchange/ls.attrchange';
@@ -35,14 +35,6 @@ const AppWrapper = (props: AppProps<{ user?: UserRequestedDoc }>) => {
     removeFromStorage({ type: 'localStorage', key: 'routeBeforeLeavingToLogin' });
     router.push(routeBeforeLeaving);
   }
-
-  useEffect(() => {
-    if (pageProps.user?.userId) {
-      const locationBeforeNavigatingToLogin = getRouteBeforeLeavingToLogIn();
-
-      console.log(locationBeforeNavigatingToLogin);
-    }
-  }, []);
 
   return (
     <div className="page-container bg-gray-100">

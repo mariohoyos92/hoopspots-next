@@ -1,5 +1,5 @@
 import auth0 from '../../../lib/auth0';
-import { createUser, getUserById } from '../_repositories/user-repository';
+import { getUserById } from '../_repositories/user-repository';
 
 export default async function userProfile(req, res) {
   try {

@@ -16,7 +16,7 @@ type Props = {
 const PlayerCard: React.FC<Props> = ({ name, imageUrl, height, position, className }) => {
   return (
     <div className={`player-card inline-block ${className}`}>
-      <Link href={`/profile/${name}`}>
+      <Link href={`/hooper/${name}`}>
         <a>
           <Card>
             <CardBody>

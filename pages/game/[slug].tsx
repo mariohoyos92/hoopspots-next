@@ -65,7 +65,7 @@ const GameDetails: NextPage<Props> = ({ gameInfo, hostInfo, user }) => {
             <div>
               Hoop-session by
               <br />{' '}
-              <Link href={`/profile/${hostInfo.name}`}>
+              <Link href={`/hooper/${hostInfo.name}`}>
                 <a className="font-semibold">{hostInfo.name}</a>
               </Link>
             </div>

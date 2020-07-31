@@ -6,6 +6,12 @@ export const getUserById = async (userId: string): Promise<UserRequestedDoc> => 
     .exec();
 };
 
+export const getUserByUserName = async (name: string): Promise<UserRequestedDoc> => {
+  return UserModel.findOne({ name })
+    .lean()
+    .exec();
+};
+
 export const getAllUsers = (): Promise<UserRequestedDoc[]> => {
   return UserModel.find()
     .lean()

@@ -123,7 +123,7 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
           <CardBody>
             <div className="flex flex-col items-center">
               <h3 className="text-lg leading-6 font-medium text-gray-900 text-center mb-2">
-                No games here yet, which means you get to be the first! <BasketballEmoji />
+                No upcoming games, it's all you! <BasketballEmoji />
               </h3>
               <Button onClick={handleCreateGame}>Create game</Button>
             </div>

@@ -30,7 +30,7 @@ export type UserRequestedDoc = User & MongoProps;
 
 const userDefinition: SchemaDefinition<User> = {
   userId: { type: String, required: true, index: true, unique: true },
-  name: { type: String, required: true, trim: true },
+  name: { type: String, required: true, trim: true, unique: true },
   email: { type: String, required: true, trim: true, lowercase: true },
   profilePhotoUrl: { type: String, required: true },
   location: { type: mapboxAddressFieldsDefinition },
