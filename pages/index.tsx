@@ -25,16 +25,16 @@ const Home: NextPage = () => {
   }
   return (
     <>
-      <MetaTags title={'home title'} description={'this is a description'} />
-      <main className="mt-10 mx-auto max-w-screen-xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 xl:mt-28">
+      <MetaTags title={'HoopSpots'} description={'Find pickup basketball games near you.'} />
+      <main className="max-w-screen-xl px-4 mx-auto mt-10 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 xl:mt-28">
         <div className="text-center">
-          <h1 className="text-4xl tracking-tight leading-10 font-extrabold text-gray-900 sm:text-5xl sm:leading-none md:text-6xl">
+          <h1 className="text-4xl font-extrabold leading-10 tracking-tight text-gray-900 sm:text-5xl sm:leading-none md:text-6xl">
             Hoop<span className="text-red-600">Spots</span>
           </h1>
-          <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+          <p className="max-w-md mx-auto mt-3 text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
             Pickup basketball at your fingertips.
           </p>
-          <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
+          <div className="max-w-md mx-auto mt-5 sm:flex sm:justify-center md:mt-8">
             {isServer() ? (
               <SSRPlaceHolder />
             ) : (
