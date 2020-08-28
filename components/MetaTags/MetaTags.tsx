@@ -1,6 +1,5 @@
 import React from 'react';
 import Head from 'next/head';
-import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 
 interface Props {
@@ -9,9 +8,8 @@ interface Props {
   image?: string | undefined | boolean;
 }
 
-const { publicRuntimeConfig } = getConfig();
-
-const FALLBACK_IMAGE = `${publicRuntimeConfig.imgixUrl}/hp/hoops.jpg`;
+// TODO: Get a dope image in here
+const FALLBACK_IMAGE = `/hp/hoops.jpg`;
 
 const MetaTags: React.FC<Props> = ({ title = 'Hoops', description = '', image = FALLBACK_IMAGE }) => {
   const router = useRouter();
