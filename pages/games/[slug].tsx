@@ -90,15 +90,15 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
     <>
       <MetaTags title={'game finder'} description={'place to find courts'} />
       <div className="mb-5">
-        <h2 className="text-lg leading-6 font-semibold text-gray-900">Searching within</h2>
+        <h2 className="text-lg font-semibold leading-6 text-gray-900">Searching within</h2>
         <div className="flex flex-col lg:flex-row lg:items-center ">
           <div className="lg:mr-4">
-            <label htmlFor="distance" className="block text-sm leading-5 font-medium text-gray-700 hidden">
+            <label htmlFor="distance" className="hidden block text-sm font-medium leading-5 text-gray-700">
               Distance
             </label>
             <select
               id="distance"
-              className="my-2 form-select block w-full pl-3 pr-10 py-2 text-base leading-6 border-gray-300 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5"
+              className="block w-full py-2 pl-3 pr-10 my-2 text-base leading-6 border-gray-300 form-select focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5"
               onChange={handleDistanceChange}
               value={distance}
             >
@@ -112,8 +112,8 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
           <GeoCodeAutoComplete id="game-finder-lookup" placeHolder={placeInfo.text} onResult={handleLocationChange} />
         </div>
       </div>
-      <div className="flex justify-between w-full items-center mb-5">
-        <h2 className="text-lg leading-6 font-semibold text-gray-900">Upcoming games</h2>
+      <div className="flex items-center justify-between w-full mb-5">
+        <h2 className="text-lg font-semibold leading-6 text-gray-900">Upcoming games</h2>
         {hasUpcomingGames ? <Button onClick={handleCreateGame}>Create game</Button> : null}
       </div>
       {hasUpcomingGames ? (
@@ -122,7 +122,7 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
         <Card className="mb-5">
           <CardBody>
             <div className="flex flex-col items-center">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 text-center mb-2">
+              <h3 className="mb-2 text-lg font-medium leading-6 text-center text-gray-900">
                 No upcoming games, it's all you! <BasketballEmoji />
               </h3>
               <Button onClick={handleCreateGame}>Create game</Button>
@@ -132,7 +132,7 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
       )}
       {hasPastGames ? (
         <>
-          <h2 className="text-lg leading-6 font-semibold text-gray-900 mb-5">Past games</h2>
+          <h2 className="mb-5 text-lg font-semibold leading-6 text-gray-900">Past games</h2>
           {pastGames.map(game => (
             <GameCard game={game} key={game._id} distance={getCourtDistance(game.courtId)} />
           ))}
@@ -148,9 +148,13 @@ const GameFinder: NextPage<Props> = ({ placeInfo, user, courts, games }) => {
 };
 
 export async function getServerSideProps({ query }) {
+  console.log({ query });
   const placeInfo = stringifyForNext(await getPlaceBySlug(query.slug as string));
+  console.log({ placeInfo });
   const courts = stringifyForNext(await getCourtsNearLocation(placeInfo.center.coordinates, query.distance));
+  console.log({ courts });
   const games = stringifyForNext(await getGamesWithCourtInfo(courts));
+  console.log({ games });
   return { props: { courts, placeInfo, games } };
 }
 
