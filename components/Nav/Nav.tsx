@@ -30,12 +30,12 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
 
   return (
     <nav style={{ background: Colors.black }}>
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-5xl px-4 mx-auto sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <Link href={appRoutes.home}>
-                <a className="font-bold text-3xl md:text-4xl">
+                <a className="text-3xl font-bold md:text-4xl">
                   <span className="text-white">
                     H<span className="text-red-600">S</span>
                   </span>
@@ -43,25 +43,28 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
               </Link>
             </div>
           </div>
-          <div className="hidden md:block">
-            <div className="ml-4 flex items-center md:ml-6">
+          {
+            // TODO: Turn back on after launch
+          }
+          {/* <div className="hidden md:block">
+            <div className="flex items-center ml-4 md:ml-6">
               {
                 // Profile dropdown
               }
-              <div className="ml-3 relative">
+              <div className="relative ml-3">
                 {user ? (
                   <div>
                     <button
-                      className="max-w-xs flex items-center text-sm rounded-full text-white focus:outline-none focus:shadow-solid"
+                      className="flex items-center max-w-xs text-sm text-white rounded-full focus:outline-none focus:shadow-solid"
                       id="user-menu"
                       aria-label="User menu"
                       aria-haspopup="true"
                       onClick={handleProfileDropdownClick}
                     >
                       {user && user.profilePhotoUrl ? (
-                        <img className="h-8 w-8 rounded-full" src={user.profilePhotoUrl} alt="avatar" />
+                        <img className="w-8 h-8 rounded-full" src={user.profilePhotoUrl} alt="avatar" />
                       ) : (
-                        <svg fill="currentColor" viewBox="0 0 20 20" className="h-8 w-8 text-gray-400">
+                        <svg fill="currentColor" viewBox="0 0 20 20" className="w-8 h-8 text-gray-400">
                           <path
                             fillRule="evenodd"
                             d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
@@ -92,7 +95,7 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
                   )}
                 >
                   <div
-                    className="py-1 rounded-md bg-white shadow-xs"
+                    className="py-1 bg-white rounded-md shadow-xs"
                     role="menu"
                     aria-orientation="vertical"
                     aria-labelledby="user-menu"
@@ -112,13 +115,13 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
               </div>
             </div>
           </div>
-          <div className="-mr-2 flex md:hidden">
+          <div className="flex -mr-2 md:hidden">
             {
               // Mobile menu button -->
             }
             {user ? (
               <button
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white"
+                className="inline-flex items-center justify-center p-2 text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white"
                 onClick={handleHamburgerClick}
               >
                 {
@@ -149,7 +152,7 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
                 <StyledLink>Login / Signup</StyledLink>
               </Link>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -157,14 +160,17 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
         //Mobile menu, toggle classes based on menu state.
         //  Open: "block", closed: "hidden"
       }
-      <div className={cn({ hidden: !hamburgerMenuIsOpen, block: hamburgerMenuIsOpen }, 'md:hidden')}>
+      {
+        // TODO: turn back on after launch
+      }
+      {/* <div className={cn({ hidden: !hamburgerMenuIsOpen, block: hamburgerMenuIsOpen }, 'md:hidden')}>
         <div className="pt-4 pb-3 border-t border-gray-700">
           <div className="flex items-center px-5">
             <div className="flex-shrink-0">
               {user && user.profilePhotoUrl ? (
-                <img className="h-10 w-10 rounded-full" src={user.profilePhotoUrl} alt="avatar" />
+                <img className="w-10 h-10 rounded-full" src={user.profilePhotoUrl} alt="avatar" />
               ) : (
-                <svg fill="currentColor" viewBox="0 0 20 20" className="h-10 w-10 text-gray-400">
+                <svg fill="currentColor" viewBox="0 0 20 20" className="w-10 h-10 text-gray-400">
                   <path
                     fillRule="evenodd"
                     d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
@@ -177,20 +183,20 @@ const Nav: React.FC<{ user?: UserRequestedDoc }> = ({ user }) => {
               <div className="text-base font-medium leading-none text-white">{user && user.name}</div>
             </div>
           </div>
-          <div className="mt-3 px-2">
+          <div className="px-2 mt-3">
             <Link href={appRoutes.profile}>
-              <a className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700">
+              <a className="block px-3 py-2 text-base font-medium text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700">
                 Your Profile
               </a>
             </Link>
             <Link href={appRoutes.logout}>
-              <a className="mt-1 block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700">
+              <a className="block px-3 py-2 mt-1 text-base font-medium text-gray-400 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:text-white focus:bg-gray-700">
                 Sign out
               </a>
             </Link>
           </div>
         </div>
-      </div>
+      </div> */}
     </nav>
   );
 };

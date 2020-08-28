@@ -23,19 +23,47 @@ const Home: NextPage = () => {
       router.push(`/games/[slug]`, `/games/${location}`);
     }
   }
+  // TODO: pick it up from here!
+
+  async function handleEmailSignup(e: SyntheticEvent) {
+    e.preventDefault();
+  }
   return (
     <>
       <MetaTags title={'HoopSpots'} description={'Find pickup basketball games near you.'} />
       <main className="max-w-screen-xl px-4 mx-auto mt-10 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 xl:mt-28">
         <div className="text-center">
-          <h1 className="text-4xl font-extrabold leading-10 tracking-tight text-gray-900 sm:text-5xl sm:leading-none md:text-6xl">
+          <h1 className="text-5xl font-extrabold leading-10 tracking-tight text-gray-900 sm:text-5xl sm:leading-none md:text-6xl">
             Hoop<span className="text-red-600">Spots</span>
           </h1>
-          <p className="max-w-md mx-auto mt-3 text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+          {/* <p className="max-w-md mx-auto mt-3 text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
             Pickup basketball at your fingertips.
+          </p> */}
+          <p className="max-w-md mx-auto mt-3 text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+            🚧👷 Under Construction 👷🚧
+            <br />
+            Drop your email below to get alerted when it's ready
           </p>
+          <div className="mt-4 sm:flex sm:items-center sm:justify-center">
+            <div className="w-full max-w-sm">
+              <label htmlFor="email" className="sr-only">
+                Email
+              </label>
+              <div className="relative rounded-md shadow-sm">
+                <input
+                  id="email"
+                  type="email"
+                  className="block w-full form-input sm:text-sm sm:leading-5"
+                  placeholder="you@example.com"
+                />
+              </div>
+            </div>
+            <span className="inline-flex mt-3 rounded-md shadow-sm sm:mt-0 sm:ml-3 sm:w-auto">
+              <Button onClick={handleEmailSignup}>Sign Up</Button>
+            </span>
+          </div>
           <div className="max-w-md mx-auto mt-5 sm:flex sm:justify-center md:mt-8">
-            {isServer() ? (
+            {/* {isServer() ? (
               <SSRPlaceHolder />
             ) : (
               <div>
@@ -48,7 +76,7 @@ const Home: NextPage = () => {
             )}
             <Button onClick={handleSubmit} disabled={!location} className="w-full mt-4 sm:mt-0 sm:ml-4">
               Find Games
-            </Button>
+            </Button> */}
           </div>
         </div>
       </main>
