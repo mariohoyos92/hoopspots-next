@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next --port $PORT",
-    "build": "next build",
-    "start": "next start"
+    "build": "next build"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^0.10.0",
