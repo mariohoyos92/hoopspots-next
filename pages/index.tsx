@@ -59,7 +59,9 @@ const Home: NextPage = () => {
             </p>
           ) : (
             <p className="max-w-md mx-auto mt-3 text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-              Thank you! 🙌 If you want progress updates or have suggestions,{' '}
+              Thank you! 🙌
+              <br />
+              If you want progress updates or have suggestions,{' '}
               <a
                 className="text-red-700"
                 href="https://twitter.com/marioahoyos"
