@@ -19,6 +19,7 @@ export const connectToMongo = async () => {
     mongoose.connection.on('error', err => {
       console.error(err);
     });
+    mongoose.connection.on('connected', () => console.log('New database connection'));
     cachedDb = db;
     return db;
   } catch (err) {

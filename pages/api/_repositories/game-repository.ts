@@ -1,10 +1,12 @@
 import CourtModel, { CourtRequestedDoc } from '../_models/court-model';
 import GameModel, { Game, GameRequestedDoc } from '../_models/game-model';
 import { getUserById } from './user-repository';
+import connectToMongo from '../_database-connections/mongoose-connection';
 
 export type CreateGameParams = Omit<Game, 'rsvps'>;
 
 export const createGame = async (game: Game) => {
+  await connectToMongo();
   const createdGame = await GameModel.create(game);
   return createdGame;
 };
@@ -13,6 +15,7 @@ export type GamesWithCourtInfo = GameRequestedDoc & { courtDetails: [CourtReques
 export type GameWithCourtInfo = GameRequestedDoc & { courtDetails: CourtRequestedDoc };
 
 export const getGameBySlug = async (slug: string): Promise<GameWithCourtInfo> => {
+  await connectToMongo();
   const game = await GameModel.findOne({ slug })
     .lean()
     .exec();
@@ -21,6 +24,7 @@ export const getGameBySlug = async (slug: string): Promise<GameWithCourtInfo> =>
 };
 
 export const getGamesWithCourtInfo = async (courts: [CourtRequestedDoc]) => {
+  await connectToMongo();
   // startTime: { $gte: new Date() }
   const gamesWithCourtInfo = await GameModel.aggregate([
     { $match: { courtId: { $in: courts.map(({ _id }) => _id) } } },
@@ -38,6 +42,7 @@ export const getGamesWithCourtInfo = async (courts: [CourtRequestedDoc]) => {
 };
 
 export const addRSVP = async (gameId: string, userId: string) => {
+  await connectToMongo();
   const userProfile = await getUserById(userId);
   const updatedGame = await GameModel.findByIdAndUpdate(
     gameId,

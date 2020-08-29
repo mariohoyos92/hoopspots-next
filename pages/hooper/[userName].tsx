@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { NextPage } from 'next';
 import MetaTags from '../../components/MetaTags';
 import { UserRequestedDoc } from '../api/_models/user-model';

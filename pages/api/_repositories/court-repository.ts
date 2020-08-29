@@ -1,16 +1,19 @@
 import CourtModel, { CourtRequestedDoc } from '../_models/court-model';
 import { getMeters } from '../../../utils/distanceConversions';
 import { CreateCourtParams } from '../../../services/court-service';
+import connectToMongo from '../_database-connections/mongoose-connection';
 export type Coordinates = [number, number];
 
 // put service calls here, in the data-repository.
 export const getCourtById = async (courtId: string): Promise<CourtRequestedDoc> => {
+  await connectToMongo();
   return CourtModel.findById(courtId)
     .lean()
     .exec();
 };
 
-export const getAllCourts = (): Promise<CourtRequestedDoc[]> => {
+export const getAllCourts = async (): Promise<CourtRequestedDoc[]> => {
+  await connectToMongo();
   return CourtModel.find()
     .lean()
     .exec();
@@ -27,6 +30,7 @@ export const getCourtsNearLocation = async (
   skip = 0,
   limit = 100
 ): Promise<[CourtWithDistanceInformation]> => {
+  await connectToMongo();
   const courts = await CourtModel.aggregate([
     {
       $geoNear: {
@@ -48,5 +52,6 @@ export const getCourtsNearLocation = async (
 };
 
 export const createCourt = async (court: CreateCourtParams) => {
+  await connectToMongo();
   return CourtModel.create(court);
 };

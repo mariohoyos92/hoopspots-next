@@ -37,7 +37,7 @@ const AppWrapper = (props: AppProps<{ user?: UserRequestedDoc }>) => {
   }
 
   return (
-    <div className="page-container bg-gray-100">
+    <div className="bg-gray-100 page-container">
       <GoogleFonts href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" />
       <UserProvider user={pageProps.user}>
         <Nav user={pageProps.user} />
@@ -121,6 +121,7 @@ AppWrapper.getInitialProps = async appContext => {
   let user;
   if (isServer()) {
     const response = await auth0.getSession(appContext.ctx.req);
+    console.log({ response });
     const userHasAuth0Account = response && response.user;
     if (userHasAuth0Account) {
       user = await getOrCreateUserProfileFromAuthUser(response.user as UserFromAuth);
