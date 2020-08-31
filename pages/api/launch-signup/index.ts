@@ -5,8 +5,10 @@ export default async function launchSignup(req, res) {
   try {
     if (req.method === 'POST') {
       await connectToMongo();
-      await LaunchSignupModel.create({ email: req.body.email });
-      res.status(201).end();
+      const { hooperName } = req.body;
+      await LaunchSignupModel.create(req.body);
+      const results = await LaunchSignupModel.find();
+      res.status(200).json({ hooperName, users: results.length });
     }
   } catch (error) {
     console.error(error);

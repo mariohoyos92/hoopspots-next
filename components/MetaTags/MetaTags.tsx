@@ -14,7 +14,7 @@ const FALLBACK_IMAGE = `/hp/hoops.jpg`;
 const MetaTags: React.FC<Props> = ({ title = 'Hoops', description = '', image = FALLBACK_IMAGE }) => {
   const router = useRouter();
   const { asPath } = router;
-  const canonicalUrl = `https://www.hoopspots.com${asPath}`;
+  const canonicalUrl = `https://hoopspots.com${asPath}`;
   const metaImage = '/images/hoopspots-og.jpg';
   const metaData = [
     {
@@ -35,7 +35,7 @@ const MetaTags: React.FC<Props> = ({ title = 'Hoops', description = '', image = 
     },
     {
       property: 'og:url',
-      content: `https://www.hoopspots.com${asPath}`,
+      content: `https://hoopspots.com${asPath}`,
     },
   ];
   return (

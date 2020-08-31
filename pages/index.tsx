@@ -26,18 +26,25 @@ const Home: NextPage = () => {
   }
   // TODO: pick it up from here!
   const [signedUp, setSignedUp] = useState(false);
-  const [email, setEmail] = useState('');
+  const [signupForm, setSignupForm] = useState({ email: '', hooperName: '' });
+
+  const [response, setResponse] = useState(null);
+  const [error, setError] = useState(null);
 
   async function handleEmailSignup(e: SyntheticEvent) {
     e.preventDefault();
     try {
-      await Axios.post('/api/launch-signup', { email });
-      console.log('success');
+      const res = await Axios.post('/api/launch-signup', signupForm);
+      setResponse(res.data);
       setSignedUp(true);
     } catch (error) {
       console.log('error signing up');
-      console.log({ error });
+      setError(error);
     }
+  }
+
+  function handleChange(e: SyntheticEvent<HTMLInputElement>) {
+    setSignupForm({ ...signupForm, [e.target.name]: e.target.value });
   }
 
   return (
@@ -56,47 +63,62 @@ const Home: NextPage = () => {
           {/* <p className="max-w-md mx-auto mt-3 text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
             Pickup basketball at your fingertips.
           </p> */}
-          {!signedUp ? (
+          {!response ? (
             <p className="max-w-md mx-auto mt-3 text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-              🚧👷 Under Construction 👷🚧
-              <br />
-              Drop your email below to get access when it's ready
+              Claim your hooper-name now! 🏀
             </p>
           ) : (
-            <p className="max-w-md mx-auto mt-3 text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-              Thank you! 🙌
+            <p className="max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
               <br />
-              If you want progress updates or have suggestions,{' '}
-              <a
-                className="text-red-700"
-                href="https://twitter.com/marioahoyos"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                {' '}
-                hit me up on Twitter!
-              </a>
+              <span className="font-bold">Thank you, {response.hooperName}! 🙌</span>
+              <br />
+              <br />
+              You are hooper #<span className="font-bold">{response.users}!</span>
+              <br />
             </p>
           )}
 
           {!signedUp ? (
-            <form className="mt-4 sm:flex sm:items-center sm:justify-center" onSubmit={handleEmailSignup}>
+            <form className="flex flex-col items-center justify-center mt-4 text-left" onSubmit={handleEmailSignup}>
               <div className="w-full max-w-sm">
-                <label htmlFor="email" className="sr-only">
-                  Email
-                </label>
-                <div className="relative rounded-md shadow-sm">
+                <label htmlFor="email">Email</label>
+                <div className="relative mt-1 mb-4 rounded-md shadow-sm">
                   <input
                     id="email"
                     type="email"
+                    name="email"
                     className="block w-full form-input sm:text-sm sm:leading-5"
                     placeholder="you@example.com"
-                    onChange={e => setEmail(e.target.value)}
-                    value={email}
+                    onChange={handleChange}
+                    value={signupForm.email}
                   />
                 </div>
               </div>
-              <span className="inline-flex mt-3 rounded-md shadow-sm sm:mt-0 sm:ml-3 sm:w-auto">
+              <div className="w-full max-w-sm mb-4">
+                <label htmlFor="hoopername">Hooper-name</label>
+                <div className="relative mt-1 rounded-md shadow-sm">
+                  <input
+                    id="hoopername"
+                    type="text"
+                    name="hooperName"
+                    required
+                    pattern="[a-zA-Z0-9]+"
+                    className="block w-full form-input sm:text-sm sm:leading-5"
+                    placeholder="LebronJames"
+                    onChange={handleChange}
+                    value={signupForm.hooperName}
+                  />
+                </div>
+                <p className="mt-2 text-sm text-gray-500" id="email-description">
+                  Alphanumeric characters and underscores only
+                </p>
+              </div>
+              {error ? (
+                <p className="text-sm text-red-600" id="email-error">
+                  Email or hoopername already taken
+                </p>
+              ) : null}
+              <span className="inline-flex mt-4 rounded-md shadow-sm sm:mt-0 sm:ml-3 sm:w-auto">
                 <Button type="submit">Sign Up</Button>
               </span>
             </form>
