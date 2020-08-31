@@ -44,6 +44,7 @@ const Home: NextPage = () => {
   }
 
   function handleChange(e: SyntheticEvent<HTMLInputElement>) {
+    // @ts-ignore
     setSignupForm({ ...signupForm, [e.target.name]: e.target.value });
   }
 
