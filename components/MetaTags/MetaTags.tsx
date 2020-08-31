@@ -15,7 +15,7 @@ const MetaTags: React.FC<Props> = ({ title = 'Hoops', description = '', image = 
   const router = useRouter();
   const { asPath } = router;
   const canonicalUrl = `https://hoopspots.com${asPath}`;
-  const metaImage = '/images/hoopspots-og.jpg';
+  const metaImage = 'https://hoopspots.com/hoopspots-og.jpg';
   const metaData = [
     {
       name: 'description',
